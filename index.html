@@ -1,0 +1,2227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flextime</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f3ec;
+    --bg-card: #fbf9f4;
+    --ink: #1a1714;
+    --ink-soft: #5a544c;
+    --ink-faint: #8a8278;
+    --line: #d9d2c4;
+    --line-soft: #e8e2d4;
+    --accent: #c44a1a;
+    --accent-soft: #e8d4c4;
+    --pos: #2d6a4f;
+    --pos-soft: #d4e6dc;
+    --neg: #a8341c;
+    --neg-soft: #f0d8d0;
+    --shadow: 0 1px 0 rgba(26,23,20,0.04);
+    --radius: 4px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1714;
+      --bg-card: #221e1a;
+      --ink: #f0e9dc;
+      --ink-soft: #b8ad9c;
+      --ink-faint: #7a7166;
+      --line: #3a342c;
+      --line-soft: #2a251f;
+      --accent: #e8825a;
+      --accent-soft: #3a2820;
+      --pos: #7fb89a;
+      --pos-soft: #1f3a2c;
+      --neg: #d88a78;
+      --neg-soft: #3a2018;
+      --shadow: 0 1px 0 rgba(0,0,0,0.2);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+  header.masthead {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 24px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    font-variation-settings: "opsz" 144;
+  }
+  .brand em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-bottom: 40px;
+  }
+  .stat {
+    background: var(--bg-card);
+    padding: 24px 28px;
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    margin-bottom: 12px;
+  }
+  .stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 38px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: "opsz" 144;
+  }
+  .stat-value.pos { color: var(--pos); }
+  .stat-value.neg { color: var(--neg); }
+  .stat-sub {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-progress {
+    height: 2px;
+    background: var(--line-soft);
+    margin-top: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-progress-bar {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: 1fr; }
+    .container { padding: 24px 20px 60px; }
+    .brand { font-size: 26px; }
+  }
+  .section {
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-faint);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .timer-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .timer-display {
+    font-family: 'Fraunces', serif;
+    font-size: 48px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: "opsz" 144;
+  }
+  .timer-display.running { color: var(--accent); }
+  .timer-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex: 1;
+    min-width: 280px;
+    justify-content: flex-end;
+  }
+  input[type="text"],
+  input[type="number"],
+  input[type="date"] {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  input:focus {
+    border-color: var(--accent);
+  }
+  input::placeholder { color: var(--ink-faint); }
+  button {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    background: var(--ink);
+    color: var(--bg);
+    border: 1px solid var(--ink);
+    padding: 10px 22px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.05s;
+    letter-spacing: 0.01em;
+  }
+  button:hover { opacity: 0.85; }
+  button:active { transform: translateY(1px); }
+  button.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  button.ghost:hover { border-color: var(--ink-soft); opacity: 1; }
+  button.danger {
+    background: transparent;
+    color: var(--neg);
+    border: 1px solid var(--line);
+  }
+  button.danger:hover { border-color: var(--neg); }
+  button.accent {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .timer-note {
+    flex: 1;
+    min-width: 160px;
+  }
+  .manual-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 24px 28px;
+  }
+  .manual-grid {
+    display: grid;
+    grid-template-columns: 150px 110px 1fr auto;
+    gap: 12px;
+    align-items: end;
+  }
+  .manual-grid.range-grid {
+    grid-template-columns: 150px 100px 100px 1fr auto;
+  }
+  @media (max-width: 640px) {
+    .manual-grid { grid-template-columns: 1fr 1fr; }
+    .manual-grid > *:nth-child(3) { grid-column: span 2; }
+    .manual-grid > *:nth-child(4) { grid-column: span 2; }
+    .manual-grid.range-grid { grid-template-columns: 1fr 1fr; }
+    .manual-grid.range-grid > *:nth-child(1) { grid-column: span 2; }
+    .manual-grid.range-grid > *:nth-child(4) { grid-column: span 2; }
+    .manual-grid.range-grid > *:nth-child(5) { grid-column: span 2; }
+  }
+  .mode-toggle {
+    display: inline-flex;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 3px;
+    margin-bottom: 18px;
+    gap: 2px;
+  }
+  .mode-btn {
+    background: transparent;
+    color: var(--ink-soft);
+    border: none;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+  }
+  .mode-btn:hover { color: var(--ink); opacity: 1; }
+  .mode-btn.active {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  input[type="time"] {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.15s;
+    font-variant-numeric: tabular-nums;
+  }
+  input[type="time"]:focus { border-color: var(--accent); }
+  .lunch-row {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .checkbox-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+  .checkbox-box {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--ink-faint);
+    border-radius: 3px;
+    background: var(--bg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .checkbox-label input[type="checkbox"]:checked + .checkbox-box {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .checkbox-label input[type="checkbox"]:checked + .checkbox-box::after {
+    content: '';
+    width: 4px;
+    height: 8px;
+    border: solid var(--bg);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .checkbox-label input[type="checkbox"]:focus-visible + .checkbox-box {
+    box-shadow: 0 0 0 2px var(--accent-soft);
+  }
+  .checkbox-label .checkbox-text strong {
+    color: var(--ink);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .lunch-preview {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .lunch-preview strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .field-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+    display: block;
+  }
+  input.full { width: 100%; }
+  .entries-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .entries-toolbar .section-title { margin-bottom: 0; flex: 1; }
+  .toolbar-actions { display: flex; gap: 8px; }
+  .toolbar-actions button {
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+  .entries {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+  }
+  .entries-empty {
+    padding: 60px 32px;
+    text-align: center;
+    color: var(--ink-faint);
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-style: italic;
+  }
+  .week-group {
+    border-bottom: 1px solid var(--line);
+  }
+  .week-group:last-child { border-bottom: none; }
+  .week-header {
+    padding: 14px 24px;
+    background: var(--bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+  }
+  .week-header strong { color: var(--ink); font-weight: 500; }
+  .week-delta { font-variant-numeric: tabular-nums; }
+  .week-delta.pos { color: var(--pos); }
+  .week-delta.neg { color: var(--neg); }
+  .entry-row {
+    display: grid;
+    grid-template-columns: 100px 80px 1fr 80px 36px;
+    gap: 16px;
+    padding: 14px 24px;
+    align-items: center;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 14px;
+  }
+  .entry-row:last-child { border-bottom: none; }
+  .entry-row:hover { background: var(--bg); }
+  .entry-date {
+    color: var(--ink-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .entry-day {
+    color: var(--ink-faint);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+  .entry-hours {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: "opsz" 144;
+  }
+  .entry-note {
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  .entry-note.empty { color: var(--ink-faint); font-style: italic; }
+  .entry-delta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .entry-delta.pos { color: var(--pos); }
+  .entry-delta.neg { color: var(--neg); }
+  .entry-delta.zero { color: var(--ink-faint); }
+  .entry-delete {
+    background: transparent;
+    border: none;
+    color: var(--ink-faint);
+    font-size: 18px;
+    padding: 4px 8px;
+    cursor: pointer;
+    line-height: 1;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    transition: all 0.15s;
+  }
+  .entry-delete:hover {
+    color: var(--neg);
+    background: var(--neg-soft);
+  }
+  @media (max-width: 640px) {
+    .entry-row {
+      grid-template-columns: 1fr auto 28px;
+      grid-template-rows: auto auto;
+      gap: 6px 12px;
+    }
+    .entry-date { grid-column: 1; grid-row: 1; }
+    .entry-hours { grid-column: 2; grid-row: 1; text-align: right; }
+    .entry-note { grid-column: 1 / 3; grid-row: 2; }
+    .entry-delta { grid-column: 2; grid-row: 2; }
+    .entry-delete { grid-column: 3; grid-row: 1 / 3; align-self: center; }
+  }
+  .calendar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 24px 28px;
+  }
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 12px;
+  }
+  .cal-month-label {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    font-variation-settings: "opsz" 144;
+  }
+  .cal-month-label em {
+    font-style: italic;
+    color: var(--ink-faint);
+    font-weight: 300;
+    margin-left: 6px;
+  }
+  .cal-nav {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .cal-nav button {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cal-nav button.today-btn {
+    width: auto;
+    padding: 0 12px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .cal-dow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 6px 0 10px;
+  }
+  .cal-cell {
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius);
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: border-color 0.12s, background 0.12s;
+    background: var(--bg);
+    position: relative;
+    min-height: 56px;
+  }
+  .cal-cell:hover {
+    border-color: var(--ink-soft);
+  }
+  .cal-cell.empty {
+    cursor: default;
+    background: transparent;
+    border-color: transparent;
+  }
+  .cal-cell.empty:hover { border-color: transparent; }
+  .cal-cell.weekend {
+    background: transparent;
+  }
+  .cal-cell.future {
+    cursor: default;
+    opacity: 0.5;
+  }
+  .cal-cell.future:hover { border-color: var(--line-soft); }
+  .cal-cell.today {
+    border-color: var(--accent);
+    border-width: 1.5px;
+  }
+  .cal-cell.selected {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .cal-cell.selected .cal-day-num,
+  .cal-cell.selected .cal-day-hours { color: var(--bg); }
+  .cal-cell.has-time { background: var(--bg-card); }
+  .cal-cell.under { background: color-mix(in srgb, var(--neg-soft) 50%, var(--bg-card)); border-color: color-mix(in srgb, var(--neg) 30%, var(--line)); }
+  .cal-cell.exact { background: color-mix(in srgb, var(--pos-soft) 50%, var(--bg-card)); border-color: color-mix(in srgb, var(--pos) 30%, var(--line)); }
+  .cal-cell.over { background: var(--pos-soft); border-color: color-mix(in srgb, var(--pos) 50%, var(--line)); }
+  .cal-cell.way-over { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+  .cal-day-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .cal-day-num.weekend-num { color: var(--ink-faint); }
+  .cal-day-hours {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    align-self: flex-end;
+  }
+  .cal-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line-soft);
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .cal-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cal-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+  }
+  .cal-swatch.under { background: color-mix(in srgb, var(--neg-soft) 50%, var(--bg-card)); }
+  .cal-swatch.exact { background: color-mix(in srgb, var(--pos-soft) 50%, var(--bg-card)); }
+  .cal-swatch.over { background: var(--pos-soft); }
+  .cal-swatch.way-over { background: var(--accent-soft); }
+  .cal-summary {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 12px;
+    color: var(--ink-soft);
+    flex-wrap: wrap;
+  }
+  .cal-summary span strong {
+    color: var(--ink);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .filter-banner {
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .filter-banner button {
+    background: transparent;
+    border: none;
+    color: var(--ink);
+    font-size: 12px;
+    padding: 4px 10px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  @media (max-width: 640px) {
+    .calendar-card { padding: 18px 16px; }
+    .cal-cell { min-height: 44px; padding: 4px; }
+    .cal-day-num { font-size: 10px; }
+    .cal-day-hours { font-size: 11px; }
+    .cal-legend { gap: 10px; font-size: 10px; }
+  }
+  .sync-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg-card);
+  }
+  .sync-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+    transition: background 0.2s;
+  }
+  .sync-status.synced .sync-dot { background: var(--pos); }
+  .sync-status.syncing .sync-dot {
+    background: var(--accent);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  .sync-status.error .sync-dot { background: var(--neg); }
+  .sync-status.offline .sync-dot { background: var(--ink-faint); }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .sync-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .sync-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .sync-title {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .sync-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .sync-badge.on {
+    background: var(--pos-soft);
+    border-color: color-mix(in srgb, var(--pos) 40%, var(--line));
+    color: var(--pos);
+  }
+  .sync-help {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .sync-help a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--accent);
+  }
+  .sync-help a:hover { border-style: solid; }
+  .sync-help code {
+    background: var(--bg);
+    padding: 1px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .sync-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 640px) {
+    .sync-grid { grid-template-columns: 1fr; }
+  }
+  .sync-log {
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    min-height: 16px;
+  }
+  .sync-log.error { color: var(--neg); }
+  .sync-log.success { color: var(--pos); }
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .footer a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted var(--ink-faint); }
+  .footer a:hover { color: var(--accent); border-color: var(--accent); }
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    transition: transform 0.25s ease;
+    z-index: 100;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .settings-row {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .settings-row label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .settings-row input[type="number"] {
+    width: 70px;
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  details.settings {
+    margin-bottom: 24px;
+  }
+  details.settings summary {
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    padding: 8px 0;
+    user-select: none;
+  }
+  details.settings summary:hover { color: var(--ink-soft); }
+  details.settings[open] summary { color: var(--ink); margin-bottom: 12px; }
+  .settings-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 20px 24px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="masthead">
+    <div>
+      <div class="brand">Flex<em>tide</em></div>
+      <div class="meta" style="margin-top: 8px;">A quiet ledger of hours</div>
+    </div>
+    <div style="text-align: right;">
+      <div class="meta" id="today-meta"></div>
+      <div class="sync-status" id="sync-status" style="display: none; margin-top: 6px;">
+        <span class="sync-dot" id="sync-dot"></span>
+        <span id="sync-text">Not connected</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="stats" aria-label="Summary">
+    <div class="stat">
+      <div class="stat-label">Flex balance</div>
+      <div class="stat-value" id="balance-value">0h 0m</div>
+      <div class="stat-sub" id="balance-sub">Across all logged time</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">This week</div>
+      <div class="stat-value" id="week-value">0.0h</div>
+      <div class="stat-sub" id="week-sub">of 37.5h target</div>
+      <div class="stat-progress"><div class="stat-progress-bar" id="week-bar" style="width: 0%"></div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">This month</div>
+      <div class="stat-value" id="month-value">0.0h</div>
+      <div class="stat-sub" id="month-sub">of 160.33h target</div>
+      <div class="stat-progress"><div class="stat-progress-bar" id="month-bar" style="width: 0%"></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Timer</div>
+    <div class="timer-card">
+      <div class="timer-display" id="timer-display">00:00:00</div>
+      <div class="timer-controls">
+        <input type="text" id="timer-note" class="timer-note" placeholder="What are you working on?" maxlength="120">
+        <button id="timer-toggle" class="accent">Start</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Add manually</div>
+    <div class="manual-card">
+      <div class="mode-toggle" role="tablist" aria-label="Entry mode">
+        <button type="button" class="mode-btn active" data-mode="hours" role="tab" aria-selected="true">Hours</button>
+        <button type="button" class="mode-btn" data-mode="range" role="tab" aria-selected="false">Start &amp; stop</button>
+      </div>
+
+      <div class="manual-grid" id="manual-grid-hours">
+        <div>
+          <label class="field-label" for="m-date">Date</label>
+          <input type="date" id="m-date" class="full">
+        </div>
+        <div>
+          <label class="field-label" for="m-hours">Hours</label>
+          <input type="number" id="m-hours" step="0.25" min="0" max="24" placeholder="7.5" class="full">
+        </div>
+        <div>
+          <label class="field-label" for="m-note">Note</label>
+          <input type="text" id="m-note" placeholder="Optional" maxlength="120" class="full">
+        </div>
+        <button id="m-add">Add entry</button>
+      </div>
+
+      <div class="manual-grid range-grid" id="manual-grid-range" style="display: none;">
+        <div>
+          <label class="field-label" for="m-r-date">Date</label>
+          <input type="date" id="m-r-date" class="full">
+        </div>
+        <div>
+          <label class="field-label" for="m-r-start">Start</label>
+          <input type="time" id="m-r-start" class="full" value="08:00">
+        </div>
+        <div>
+          <label class="field-label" for="m-r-stop">Stop</label>
+          <input type="time" id="m-r-stop" class="full" value="16:00">
+        </div>
+        <div>
+          <label class="field-label" for="m-r-note">Note</label>
+          <input type="text" id="m-r-note" placeholder="Optional" maxlength="120" class="full">
+        </div>
+        <button id="m-r-add">Add entry</button>
+      </div>
+
+      <div class="lunch-row">
+        <label class="checkbox-label">
+          <input type="checkbox" id="m-lunch" checked>
+          <span class="checkbox-box" aria-hidden="true"></span>
+          <span class="checkbox-text">Subtract <strong id="m-lunch-mins">30</strong> min unpaid lunch</span>
+        </label>
+        <span class="lunch-preview" id="m-preview"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Calendar</div>
+    <div class="calendar-card">
+      <div class="cal-header">
+        <div class="cal-month-label" id="cal-month-label">Month</div>
+        <div class="cal-nav">
+          <button id="cal-prev" aria-label="Previous month">‹</button>
+          <button class="today-btn" id="cal-today">Today</button>
+          <button id="cal-next" aria-label="Next month">›</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><span class="cal-swatch under"></span>Under target</div>
+        <div class="cal-legend-item"><span class="cal-swatch exact"></span>On target</div>
+        <div class="cal-legend-item"><span class="cal-swatch over"></span>Over (≤+2h)</div>
+        <div class="cal-legend-item"><span class="cal-swatch way-over"></span>Heavy (&gt;+2h)</div>
+      </div>
+      <div class="cal-summary" id="cal-summary"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <details class="settings">
+      <summary>Settings &amp; data</summary>
+      <div class="settings-panel">
+        <div class="settings-row" style="margin-bottom: 14px;">
+          <label>Daily target
+            <input type="number" id="set-daily" step="0.25" min="0" max="24">
+            <span style="font-size: 11px; color: var(--ink-faint);">hours</span>
+          </label>
+          <label>Weekly target
+            <input type="number" id="set-weekly" step="0.25" min="0" max="168">
+            <span style="font-size: 11px; color: var(--ink-faint);">hours</span>
+          </label>
+          <label>Monthly target
+            <input type="number" id="set-monthly" step="0.01" min="0" max="744">
+            <span style="font-size: 11px; color: var(--ink-faint);">hours</span>
+          </label>
+          <label>Lunch break
+            <input type="number" id="set-lunch" step="5" min="0" max="180">
+            <span style="font-size: 11px; color: var(--ink-faint);">minutes</span>
+          </label>
+        </div>
+        <div class="toolbar-actions">
+          <button class="ghost" id="btn-export">Export CSV</button>
+          <button class="ghost" id="btn-export-json">Backup JSON</button>
+          <button class="ghost" id="btn-import">Import JSON</button>
+          <button class="danger" id="btn-clear">Reset all data</button>
+          <input type="file" id="import-file" accept=".json" style="display:none">
+        </div>
+        <div style="margin-top: 14px; font-size: 12px; color: var(--ink-faint); line-height: 1.6;">
+          Data stays in this browser only. Export a JSON backup occasionally if you depend on it. Import to move between browsers or devices.
+        </div>
+
+        <div class="sync-section">
+          <div class="sync-header">
+            <span class="sync-title">Sync via GitHub Gist</span>
+            <span class="sync-badge" id="sync-badge">Off</span>
+          </div>
+          <div class="sync-help">
+            Stores your data in a private gist so the same URL works across devices. Setup: <a href="https://gist.github.com" target="_blank" rel="noopener">create a secret gist</a> with filename <code>flextime.json</code>, then a <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">fine-grained token</a> with <strong>Gists: Read &amp; write</strong>.
+          </div>
+          <div class="sync-grid">
+            <div>
+              <label class="field-label" for="sync-gist-id">Gist ID</label>
+              <input type="text" id="sync-gist-id" class="full" placeholder="abc123def456..." autocomplete="off" spellcheck="false">
+            </div>
+            <div>
+              <label class="field-label" for="sync-token">Token</label>
+              <input type="password" id="sync-token" class="full" placeholder="github_pat_..." autocomplete="off" spellcheck="false">
+            </div>
+          </div>
+          <div class="toolbar-actions" style="margin-top: 12px;">
+            <button class="ghost" id="btn-sync-save">Connect &amp; sync now</button>
+            <button class="ghost" id="btn-sync-pull">Pull from gist</button>
+            <button class="ghost" id="btn-sync-push">Push to gist</button>
+            <button class="danger" id="btn-sync-disconnect">Disconnect</button>
+          </div>
+          <div class="sync-log" id="sync-log"></div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section class="section">
+    <div class="entries-toolbar">
+      <div class="section-title">Recent entries</div>
+    </div>
+    <div id="filter-banner" class="filter-banner" style="display: none;">
+      <span id="filter-banner-text"></span>
+      <button id="filter-clear">Show all</button>
+    </div>
+    <div class="entries" id="entries-list">
+      <div class="entries-empty">No entries yet. Start the timer or add one above.</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>Flextide · single file · runs offline</span>
+    <span id="entry-count">0 entries</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  const STORAGE = {
+    entries: 'flextide.entries.v1',
+    timer: 'flextide.timer.v1',
+    settings: 'flextide.settings.v1',
+    sync: 'flextide.sync.v1',
+    lastSync: 'flextide.lastSync.v1'
+  };
+
+  const DEFAULT_SETTINGS = {
+    dailyTarget: 7.5,
+    weeklyTarget: 37.5,
+    monthlyTarget: 160.33,
+    lunchMinutes: 30
+  };
+
+  let entries = [];
+  let timer = null;
+  let settings = { ...DEFAULT_SETTINGS };
+  let tickHandle = null;
+
+  // ---- Sync state ----
+  let syncConfig = null; // { gistId, token } or null
+  let syncDebounceHandle = null;
+  let syncInFlight = false;
+  let lastDataMtime = 0; // last time local data changed (used for conflict ordering)
+  let lastSyncMtime = 0; // last time we successfully synced
+
+  // ---- Storage ----
+  function loadAll() {
+    try {
+      const e = localStorage.getItem(STORAGE.entries);
+      entries = e ? JSON.parse(e) : [];
+    } catch { entries = []; }
+    try {
+      const t = localStorage.getItem(STORAGE.timer);
+      timer = t ? JSON.parse(t) : null;
+    } catch { timer = null; }
+    try {
+      const s = localStorage.getItem(STORAGE.settings);
+      settings = s ? { ...DEFAULT_SETTINGS, ...JSON.parse(s) } : { ...DEFAULT_SETTINGS };
+    } catch { settings = { ...DEFAULT_SETTINGS }; }
+    try {
+      const sc = localStorage.getItem(STORAGE.sync);
+      syncConfig = sc ? JSON.parse(sc) : null;
+    } catch { syncConfig = null; }
+    try {
+      const ls = localStorage.getItem(STORAGE.lastSync);
+      lastSyncMtime = ls ? parseInt(ls, 10) : 0;
+    } catch { lastSyncMtime = 0; }
+  }
+  function saveEntries() {
+    localStorage.setItem(STORAGE.entries, JSON.stringify(entries));
+    lastDataMtime = Date.now();
+    schedulePush();
+  }
+  function saveTimer() {
+    if (timer) localStorage.setItem(STORAGE.timer, JSON.stringify(timer));
+    else localStorage.removeItem(STORAGE.timer);
+  }
+  function saveSettings() {
+    localStorage.setItem(STORAGE.settings, JSON.stringify(settings));
+    lastDataMtime = Date.now();
+    schedulePush();
+  }
+  function saveSyncConfig() {
+    if (syncConfig) localStorage.setItem(STORAGE.sync, JSON.stringify(syncConfig));
+    else localStorage.removeItem(STORAGE.sync);
+  }
+  function saveLastSync() { localStorage.setItem(STORAGE.lastSync, String(lastSyncMtime)); }
+
+  // ---- Sync (GitHub Gist) ----
+  const GIST_FILENAME = 'flextime.json';
+  const SYNC_DEBOUNCE_MS = 2500;
+  const SYNC_LOG_HIDE_MS = 4000;
+
+  function setSyncStatus(state, text) {
+    const el = $('sync-status');
+    const dot = el;
+    const txt = $('sync-text');
+    if (!syncConfig) {
+      el.style.display = 'none';
+      return;
+    }
+    el.style.display = 'inline-flex';
+    dot.classList.remove('synced', 'syncing', 'error', 'offline');
+    if (state) dot.classList.add(state);
+    txt.textContent = text;
+  }
+
+  function logSync(msg, level = '') {
+    const el = $('sync-log');
+    if (!el) return;
+    el.className = 'sync-log' + (level ? ' ' + level : '');
+    el.textContent = msg;
+    if (level === 'success') {
+      clearTimeout(logSync._h);
+      logSync._h = setTimeout(() => {
+        if (el.textContent === msg) el.textContent = '';
+      }, SYNC_LOG_HIDE_MS);
+    }
+  }
+
+  function buildPayload() {
+    return {
+      version: 1,
+      mtime: lastDataMtime || Date.now(),
+      exportedAt: new Date().toISOString(),
+      settings,
+      entries
+    };
+  }
+
+  function applyPayload(payload, opts = {}) {
+    if (!payload || !Array.isArray(payload.entries)) {
+      throw new Error('Invalid payload structure');
+    }
+    entries = payload.entries;
+    if (payload.settings) {
+      settings = { ...DEFAULT_SETTINGS, ...payload.settings };
+    }
+    if (payload.mtime) lastDataMtime = payload.mtime;
+    // Persist without triggering another sync
+    localStorage.setItem(STORAGE.entries, JSON.stringify(entries));
+    localStorage.setItem(STORAGE.settings, JSON.stringify(settings));
+    if (!opts.skipRender) {
+      loadSettingsIntoForm();
+      renderAll();
+    }
+  }
+
+  async function gistFetch(method, body) {
+    if (!syncConfig) throw new Error('Not connected');
+    const headers = {
+      'Authorization': 'Bearer ' + syncConfig.token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    };
+    if (body) headers['Content-Type'] = 'application/json';
+    const res = await fetch(`https://api.github.com/gists/${syncConfig.gistId}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (!res.ok) {
+      let errMsg = `GitHub API ${res.status}`;
+      try {
+        const j = await res.json();
+        if (j.message) errMsg = j.message;
+      } catch {}
+      throw new Error(errMsg);
+    }
+    return res.json();
+  }
+
+  async function pullFromGist({ silent = false } = {}) {
+    if (!syncConfig) return;
+    if (!silent) setSyncStatus('syncing', 'Pulling…');
+    try {
+      const gist = await gistFetch('GET');
+      const file = gist.files && gist.files[GIST_FILENAME];
+      if (!file) {
+        // Gist exists but file isn't there yet — push our state to seed it
+        if (!silent) logSync('Gist is empty, pushing local data to seed it…');
+        await pushToGist({ force: true });
+        return;
+      }
+      let content = file.content;
+      if (file.truncated && file.raw_url) {
+        const raw = await fetch(file.raw_url);
+        content = await raw.text();
+      }
+      const remote = JSON.parse(content);
+      const remoteMtime = remote.mtime || 0;
+      const localMtime = lastDataMtime || 0;
+
+      if (remoteMtime > localMtime) {
+        applyPayload(remote);
+        lastSyncMtime = Date.now();
+        saveLastSync();
+        setSyncStatus('synced', 'Synced just now');
+        logSync(`Pulled ${remote.entries.length} entries from gist`, 'success');
+      } else if (localMtime > remoteMtime) {
+        if (!silent) logSync('Local is newer — pushing instead');
+        await pushToGist();
+      } else {
+        lastSyncMtime = Date.now();
+        saveLastSync();
+        setSyncStatus('synced', 'In sync');
+        if (!silent) logSync('Already in sync', 'success');
+      }
+    } catch (e) {
+      setSyncStatus('error', 'Sync error');
+      logSync('Pull failed: ' + e.message, 'error');
+    }
+  }
+
+  async function pushToGist({ force = false } = {}) {
+    if (!syncConfig) return;
+    if (syncInFlight && !force) return;
+    syncInFlight = true;
+    setSyncStatus('syncing', 'Saving…');
+    try {
+      const payload = buildPayload();
+      await gistFetch('PATCH', {
+        files: { [GIST_FILENAME]: { content: JSON.stringify(payload, null, 2) } }
+      });
+      lastSyncMtime = Date.now();
+      saveLastSync();
+      setSyncStatus('synced', 'Synced just now');
+      logSync(`Pushed ${entries.length} entries to gist`, 'success');
+    } catch (e) {
+      setSyncStatus('error', 'Sync error');
+      logSync('Push failed: ' + e.message, 'error');
+    } finally {
+      syncInFlight = false;
+    }
+  }
+
+  function schedulePush() {
+    if (!syncConfig) return;
+    clearTimeout(syncDebounceHandle);
+    setSyncStatus('syncing', 'Pending…');
+    syncDebounceHandle = setTimeout(() => {
+      pushToGist();
+    }, SYNC_DEBOUNCE_MS);
+  }
+
+  async function connectSync() {
+    const gistId = $('sync-gist-id').value.trim();
+    const token = $('sync-token').value.trim();
+    if (!gistId) { logSync('Enter a Gist ID', 'error'); return; }
+    if (!token) { logSync('Enter a token', 'error'); return; }
+    syncConfig = { gistId, token };
+    saveSyncConfig();
+    updateSyncBadge();
+    setSyncStatus('syncing', 'Connecting…');
+    logSync('Testing connection…');
+    try {
+      // First fetch — see what's there
+      const gist = await gistFetch('GET');
+      const file = gist.files && gist.files[GIST_FILENAME];
+      if (!file || !file.content || file.content.trim() === '' || file.content.trim() === '{}') {
+        // Empty / placeholder gist — push our local data
+        await pushToGist({ force: true });
+        logSync('Connected · seeded gist with local data', 'success');
+      } else {
+        // Existing data — ask if they want to pull or push
+        let remote;
+        try {
+          let content = file.content;
+          if (file.truncated && file.raw_url) {
+            const raw = await fetch(file.raw_url);
+            content = await raw.text();
+          }
+          remote = JSON.parse(content);
+        } catch {
+          remote = null;
+        }
+        const localCount = entries.length;
+        const remoteCount = (remote && remote.entries) ? remote.entries.length : 0;
+        if (localCount === 0 && remoteCount > 0) {
+          applyPayload(remote);
+          lastSyncMtime = Date.now();
+          saveLastSync();
+          setSyncStatus('synced', 'Synced just now');
+          logSync(`Connected · pulled ${remoteCount} entries`, 'success');
+        } else if (localCount > 0 && remoteCount === 0) {
+          await pushToGist({ force: true });
+          logSync('Connected · pushed local data', 'success');
+        } else if (localCount > 0 && remoteCount > 0) {
+          const choice = confirm(
+            `This device has ${localCount} entries.\nThe gist has ${remoteCount} entries.\n\n` +
+            `OK = Use the gist (replace local)\nCancel = Use local (overwrite gist)`
+          );
+          if (choice) {
+            applyPayload(remote);
+            lastSyncMtime = Date.now();
+            saveLastSync();
+            setSyncStatus('synced', 'Synced just now');
+            logSync(`Connected · pulled ${remoteCount} entries`, 'success');
+          } else {
+            await pushToGist({ force: true });
+            logSync('Connected · pushed local data', 'success');
+          }
+        } else {
+          setSyncStatus('synced', 'In sync');
+          logSync('Connected · both empty', 'success');
+        }
+      }
+    } catch (e) {
+      setSyncStatus('error', 'Connection failed');
+      logSync('Connection failed: ' + e.message, 'error');
+      // Don't disconnect — they may want to fix the values
+    }
+  }
+
+  function disconnectSync() {
+    if (!confirm('Disconnect from gist?\n\nLocal data stays on this device. Token is removed.')) return;
+    syncConfig = null;
+    saveSyncConfig();
+    $('sync-gist-id').value = '';
+    $('sync-token').value = '';
+    updateSyncBadge();
+    setSyncStatus('', '');
+    logSync('Disconnected');
+  }
+
+  function updateSyncBadge() {
+    const badge = $('sync-badge');
+    if (syncConfig) {
+      badge.textContent = 'Connected';
+      badge.classList.add('on');
+    } else {
+      badge.textContent = 'Off';
+      badge.classList.remove('on');
+    }
+  }
+
+  // ---- Date helpers ----
+  function todayISO() {
+    const d = new Date();
+    const off = d.getTimezoneOffset();
+    return new Date(d.getTime() - off * 60000).toISOString().slice(0, 10);
+  }
+  function isoWeekKey(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    const target = new Date(d.valueOf());
+    const dayNr = (d.getDay() + 6) % 7;
+    target.setDate(target.getDate() - dayNr + 3);
+    const firstThursday = target.valueOf();
+    target.setMonth(0, 1);
+    if (target.getDay() !== 4) {
+      target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
+    }
+    const week = 1 + Math.ceil((firstThursday - target) / 604800000);
+    return `${d.getFullYear()}-W${String(week).padStart(2, '0')}`;
+  }
+  function monthKey(dateStr) { return dateStr.slice(0, 7); }
+  function dayName(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+  }
+  function prettyDate(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  }
+
+  // ---- Formatting ----
+  function fmtHM(hoursDecimal) {
+    const sign = hoursDecimal < 0 ? '-' : '';
+    const abs = Math.abs(hoursDecimal);
+    const h = Math.floor(abs);
+    const m = Math.round((abs - h) * 60);
+    if (m === 60) return `${sign}${h + 1}h 0m`;
+    return `${sign}${h}h ${m}m`;
+  }
+  function fmtHMS(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  function fmtSigned(h) {
+    if (Math.abs(h) < 0.005) return '±0h 0m';
+    return (h > 0 ? '+' : '') + fmtHM(h);
+  }
+  function escapeHTML(s) {
+    return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // ---- Calculations ----
+  function workedDaysInWeek(weekKey) {
+    const days = new Set(entries.filter(e => isoWeekKey(e.date) === weekKey).map(e => e.date));
+    return days.size;
+  }
+  function flexBalance() {
+    const byWeek = {};
+    for (const e of entries) {
+      const wk = isoWeekKey(e.date);
+      byWeek[wk] = (byWeek[wk] || 0) + e.hours;
+    }
+    const today = todayISO();
+    const currentWeek = isoWeekKey(today);
+    let bal = 0;
+    for (const wk in byWeek) {
+      if (wk === currentWeek) {
+        // partial week — only count expectation for days actually logged
+        bal += byWeek[wk] - workedDaysInWeek(wk) * settings.dailyTarget;
+      } else {
+        bal += byWeek[wk] - settings.weeklyTarget;
+      }
+    }
+    return bal;
+  }
+  function thisWeekHours() {
+    const wk = isoWeekKey(todayISO());
+    return entries.filter(e => isoWeekKey(e.date) === wk).reduce((s, e) => s + e.hours, 0);
+  }
+  function thisMonthHours() {
+    const mk = monthKey(todayISO());
+    return entries.filter(e => monthKey(e.date) === mk).reduce((s, e) => s + e.hours, 0);
+  }
+
+  // ---- Render ----
+  const $ = id => document.getElementById(id);
+
+  function renderStats() {
+    const bal = flexBalance();
+    const balEl = $('balance-value');
+    balEl.textContent = fmtSigned(bal);
+    balEl.classList.toggle('pos', bal > 0.01);
+    balEl.classList.toggle('neg', bal < -0.01);
+    $('balance-sub').textContent = entries.length === 0
+      ? 'Add entries to begin tracking'
+      : `Based on ${settings.dailyTarget}h/day · ${settings.weeklyTarget}h/week`;
+
+    const wh = thisWeekHours();
+    $('week-value').textContent = `${wh.toFixed(1)}h`;
+    $('week-sub').textContent = `of ${settings.weeklyTarget}h target`;
+    $('week-bar').style.width = Math.min(100, (wh / settings.weeklyTarget) * 100) + '%';
+
+    const mh = thisMonthHours();
+    $('month-value').textContent = `${mh.toFixed(1)}h`;
+    $('month-sub').textContent = `of ${settings.monthlyTarget}h target`;
+    $('month-bar').style.width = Math.min(100, (mh / settings.monthlyTarget) * 100) + '%';
+
+    $('entry-count').textContent = entries.length === 1 ? '1 entry' : `${entries.length} entries`;
+  }
+
+  function renderEntries() {
+    const wrap = $('entries-list');
+    if (entries.length === 0) {
+      wrap.innerHTML = '<div class="entries-empty">No entries yet. Start the timer or add one above.</div>';
+      return;
+    }
+    // Apply day filter if active
+    const source = dayFilter ? entries.filter(e => e.date === dayFilter) : entries;
+    if (source.length === 0) {
+      wrap.innerHTML = '<div class="entries-empty">No entries on this day.</div>';
+      return;
+    }
+    // Sort newest first
+    const sorted = [...source].sort((a, b) => {
+      if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+      return (b.created || 0) - (a.created || 0);
+    });
+    // Group by ISO week
+    const groups = [];
+    let currentKey = null;
+    let currentList = null;
+    for (const e of sorted) {
+      const k = isoWeekKey(e.date);
+      if (k !== currentKey) {
+        currentKey = k;
+        currentList = [];
+        groups.push({ key: k, list: currentList });
+      }
+      currentList.push(e);
+    }
+    const today = todayISO();
+    const currentWeek = isoWeekKey(today);
+    const html = groups.slice(0, 12).map(g => {
+      const total = g.list.reduce((s, e) => s + e.hours, 0);
+      const isCurrent = g.key === currentWeek;
+      const expected = isCurrent ? workedDaysInWeek(g.key) * settings.dailyTarget : settings.weeklyTarget;
+      const delta = total - expected;
+      const deltaClass = delta > 0.01 ? 'pos' : (delta < -0.01 ? 'neg' : '');
+      const label = isCurrent ? `${g.key} · current` : g.key;
+      const rows = g.list.map(e => {
+        const d = e.hours - settings.dailyTarget;
+        const dClass = d > 0.01 ? 'pos' : (d < -0.01 ? 'neg' : 'zero');
+        const note = e.note ? escapeHTML(e.note) : '<span class="empty">no note</span>';
+        return `<div class="entry-row">
+          <div>
+            <div class="entry-date">${prettyDate(e.date)}</div>
+            <div class="entry-day">${dayName(e.date)}</div>
+          </div>
+          <div class="entry-hours">${e.hours.toFixed(2)}h</div>
+          <div class="entry-note">${note}</div>
+          <div class="entry-delta ${dClass}">${fmtSigned(d)}</div>
+          <button class="entry-delete" data-id="${e.id}" aria-label="Delete entry">×</button>
+        </div>`;
+      }).join('');
+      return `<div class="week-group">
+        <div class="week-header">
+          <span><strong>${label}</strong> · ${total.toFixed(1)}h</span>
+          <span class="week-delta ${deltaClass}">${fmtSigned(delta)}</span>
+        </div>
+        ${rows}
+      </div>`;
+    }).join('');
+    wrap.innerHTML = html;
+    wrap.querySelectorAll('.entry-delete').forEach(b => {
+      b.addEventListener('click', () => {
+        const id = b.getAttribute('data-id');
+        deleteEntry(id);
+      });
+    });
+  }
+
+  // ---- Calendar ----
+  let calCursor = (() => {
+    const d = new Date();
+    return { year: d.getFullYear(), month: d.getMonth() };
+  })();
+  let dayFilter = null; // ISO date string or null
+
+  function entriesByDate() {
+    const map = {};
+    for (const e of entries) {
+      if (!map[e.date]) map[e.date] = [];
+      map[e.date].push(e);
+    }
+    return map;
+  }
+
+  function dayHoursMap() {
+    const map = {};
+    for (const e of entries) {
+      map[e.date] = (map[e.date] || 0) + e.hours;
+    }
+    return map;
+  }
+
+  function classifyDay(hours) {
+    const target = settings.dailyTarget;
+    if (hours <= 0) return '';
+    const diff = hours - target;
+    if (diff < -0.25) return 'under';
+    if (Math.abs(diff) <= 0.25) return 'exact';
+    if (diff <= 2) return 'over';
+    return 'way-over';
+  }
+
+  function renderCalendar() {
+    const { year, month } = calCursor;
+    const monthDate = new Date(year, month, 1);
+    const monthName = monthDate.toLocaleDateString('en-GB', { month: 'long' });
+    $('cal-month-label').innerHTML = `${monthName} <em>${year}</em>`;
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    // Monday-first: shift Sunday(0) to 6, others -1
+    const firstDow = (firstDay.getDay() + 6) % 7;
+
+    const today = todayISO();
+    const hoursMap = dayHoursMap();
+
+    const dows = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    let html = dows.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+    // Leading empty cells
+    for (let i = 0; i < firstDow; i++) {
+      html += '<div class="cal-cell empty"></div>';
+    }
+
+    let monthTotal = 0;
+    let workedDays = 0;
+    let monthExpected = 0;
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const hours = hoursMap[dateStr] || 0;
+      const dow = (new Date(year, month, day).getDay() + 6) % 7; // 0=Mon, 6=Sun
+      const isWeekend = dow >= 5;
+      const isFuture = dateStr > today;
+      const isToday = dateStr === today;
+      const isSelected = dateStr === dayFilter;
+      const klass = classifyDay(hours);
+
+      if (hours > 0) {
+        monthTotal += hours;
+        workedDays += 1;
+        if (!isWeekend) monthExpected += settings.dailyTarget;
+      } else if (!isWeekend && !isFuture) {
+        // Weekday with no entry — count as missed expected hours up to today only
+        if (dateStr <= today) monthExpected += settings.dailyTarget;
+      }
+
+      const classes = [
+        'cal-cell',
+        isWeekend ? 'weekend' : '',
+        isFuture ? 'future' : '',
+        isToday ? 'today' : '',
+        isSelected ? 'selected' : '',
+        klass,
+        hours > 0 ? 'has-time' : ''
+      ].filter(Boolean).join(' ');
+
+      const hoursLabel = hours > 0 ? `<div class="cal-day-hours">${hours.toFixed(hours % 1 === 0 ? 0 : 1)}h</div>` : '';
+      const numClass = isWeekend ? 'cal-day-num weekend-num' : 'cal-day-num';
+
+      html += `<div class="${classes}" data-date="${dateStr}" ${isFuture ? '' : 'role="button" tabindex="0"'}>
+        <div class="${numClass}">${day}</div>
+        ${hoursLabel}
+      </div>`;
+    }
+
+    $('cal-grid').innerHTML = html;
+
+    // Wire up clicks
+    document.querySelectorAll('.cal-cell[data-date]').forEach(cell => {
+      const date = cell.getAttribute('data-date');
+      if (date > today) return;
+      const handler = () => {
+        if (dayFilter === date) {
+          dayFilter = null;
+        } else {
+          dayFilter = date;
+        }
+        renderAll();
+      };
+      cell.addEventListener('click', handler);
+      cell.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handler();
+        }
+      });
+    });
+
+    // Summary
+    const isCurrentMonth = monthKey(today) === `${year}-${String(month + 1).padStart(2, '0')}`;
+    const monthDelta = monthTotal - monthExpected;
+    const deltaClass = monthDelta > 0.01 ? 'pos' : (monthDelta < -0.01 ? 'neg' : '');
+    const deltaSign = monthDelta >= 0 ? '+' : '';
+    $('cal-summary').innerHTML = `
+      <span><strong>${workedDays}</strong> day${workedDays === 1 ? '' : 's'} worked</span>
+      <span><strong>${monthTotal.toFixed(1)}h</strong> logged</span>
+      <span style="color: ${deltaClass === 'pos' ? 'var(--pos)' : deltaClass === 'neg' ? 'var(--neg)' : 'var(--ink-soft)'};">
+        <strong>${deltaSign}${fmtHM(monthDelta)}</strong> vs ${isCurrentMonth ? 'expected so far' : 'expected'}
+      </span>
+    `;
+  }
+
+  function clearFilter() {
+    dayFilter = null;
+    renderAll();
+  }
+
+  function renderAll() {
+    renderStats();
+    renderEntries();
+    renderCalendar();
+    renderFilterBanner();
+  }
+
+  function renderFilterBanner() {
+    const banner = $('filter-banner');
+    if (!dayFilter) {
+      banner.style.display = 'none';
+      return;
+    }
+    banner.style.display = 'flex';
+    const hours = entries.filter(e => e.date === dayFilter).reduce((s, e) => s + e.hours, 0);
+    $('filter-banner-text').innerHTML = `Showing <strong>${prettyDate(dayFilter)}</strong> · ${hours.toFixed(2)}h`;
+  }
+
+  function renderTimer() {
+    const display = $('timer-display');
+    const btn = $('timer-toggle');
+    if (!timer) {
+      display.textContent = '00:00:00';
+      display.classList.remove('running');
+      btn.textContent = 'Start';
+      btn.classList.add('accent');
+      return;
+    }
+    const elapsed = Math.floor((Date.now() - timer.startedAt) / 1000);
+    display.textContent = fmtHMS(elapsed);
+    display.classList.add('running');
+    btn.textContent = 'Stop';
+    btn.classList.remove('accent');
+  }
+
+  function startTick() {
+    stopTick();
+    tickHandle = setInterval(renderTimer, 1000);
+  }
+  function stopTick() {
+    if (tickHandle) { clearInterval(tickHandle); tickHandle = null; }
+  }
+
+  // ---- Actions ----
+  function toast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast._h);
+    toast._h = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function startTimer() {
+    timer = { startedAt: Date.now(), note: $('timer-note').value.trim() };
+    saveTimer();
+    renderTimer();
+    startTick();
+    toast('Timer started');
+  }
+
+  function stopTimer() {
+    if (!timer) return;
+    const elapsedHours = (Date.now() - timer.startedAt) / 3600000;
+    if (elapsedHours < 0.0084) { // < 30 sec
+      timer = null;
+      saveTimer();
+      stopTick();
+      renderTimer();
+      toast('Timer cancelled (under 30s)');
+      return;
+    }
+    const note = (timer.note || $('timer-note').value || '').trim();
+    const entry = {
+      id: 't' + Date.now() + Math.random().toString(36).slice(2, 6),
+      date: todayISO(),
+      hours: Math.round(elapsedHours * 100) / 100,
+      note,
+      created: Date.now(),
+      source: 'timer'
+    };
+    entries.push(entry);
+    saveEntries();
+    timer = null;
+    saveTimer();
+    stopTick();
+    $('timer-note').value = '';
+    renderTimer();
+    renderAll();
+    toast(`Logged ${fmtHM(elapsedHours)}`);
+  }
+
+  let manualMode = 'hours'; // 'hours' or 'range'
+
+  function lunchHoursDeduction() {
+    if (!$('m-lunch').checked) return 0;
+    return (settings.lunchMinutes || 0) / 60;
+  }
+
+  function computeRangeHours(startStr, stopStr) {
+    if (!startStr || !stopStr) return null;
+    const [sh, sm] = startStr.split(':').map(Number);
+    const [eh, em] = stopStr.split(':').map(Number);
+    if (isNaN(sh) || isNaN(sm) || isNaN(eh) || isNaN(em)) return null;
+    let mins = (eh * 60 + em) - (sh * 60 + sm);
+    if (mins <= 0) mins += 24 * 60; // overnight wrap
+    return mins / 60;
+  }
+
+  function updatePreview() {
+    const previewEl = $('m-preview');
+    $('m-lunch-mins').textContent = settings.lunchMinutes || 0;
+
+    if (manualMode === 'range') {
+      const gross = computeRangeHours($('m-r-start').value, $('m-r-stop').value);
+      if (gross == null || gross <= 0) {
+        previewEl.textContent = '';
+        return;
+      }
+      const lunch = lunchHoursDeduction();
+      const net = Math.max(0, gross - lunch);
+      if (lunch > 0) {
+        previewEl.innerHTML = `${gross.toFixed(2)}h gross − ${(lunch).toFixed(2)}h lunch = <strong>${net.toFixed(2)}h</strong>`;
+      } else {
+        previewEl.innerHTML = `<strong>${net.toFixed(2)}h</strong>`;
+      }
+    } else {
+      const raw = parseFloat($('m-hours').value);
+      if (!raw || raw <= 0) {
+        previewEl.textContent = '';
+        return;
+      }
+      const lunch = lunchHoursDeduction();
+      const net = Math.max(0, raw - lunch);
+      if (lunch > 0) {
+        previewEl.innerHTML = `${raw.toFixed(2)}h − ${lunch.toFixed(2)}h lunch = <strong>${net.toFixed(2)}h</strong>`;
+      } else {
+        previewEl.innerHTML = `<strong>${net.toFixed(2)}h</strong>`;
+      }
+    }
+  }
+
+  function setManualMode(mode) {
+    manualMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(b => {
+      const active = b.getAttribute('data-mode') === mode;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    $('manual-grid-hours').style.display = mode === 'hours' ? 'grid' : 'none';
+    $('manual-grid-range').style.display = mode === 'range' ? 'grid' : 'none';
+    updatePreview();
+  }
+
+  function addManual() {
+    const date = $('m-date').value;
+    const hoursRaw = parseFloat($('m-hours').value);
+    const note = $('m-note').value.trim();
+    if (!date) { toast('Pick a date'); return; }
+    if (!hoursRaw || hoursRaw <= 0 || hoursRaw > 24) { toast('Enter hours between 0 and 24'); return; }
+    const lunch = lunchHoursDeduction();
+    const finalHours = Math.max(0, hoursRaw - lunch);
+    if (finalHours <= 0) { toast('Hours after lunch deduction is zero'); return; }
+    const fullNote = lunch > 0
+      ? (note ? `${note} (−${settings.lunchMinutes}min lunch)` : `−${settings.lunchMinutes}min lunch`)
+      : note;
+    const entry = {
+      id: 'm' + Date.now() + Math.random().toString(36).slice(2, 6),
+      date,
+      hours: Math.round(finalHours * 100) / 100,
+      note: fullNote,
+      created: Date.now(),
+      source: 'manual',
+      lunch: lunch > 0 ? settings.lunchMinutes : 0
+    };
+    entries.push(entry);
+    saveEntries();
+    $('m-hours').value = '';
+    $('m-note').value = '';
+    updatePreview();
+    renderAll();
+    toast(`Added ${entry.hours}h on ${prettyDate(date)}`);
+  }
+
+  function addRange() {
+    const date = $('m-r-date').value;
+    const start = $('m-r-start').value;
+    const stop = $('m-r-stop').value;
+    const note = $('m-r-note').value.trim();
+    if (!date) { toast('Pick a date'); return; }
+    if (!start || !stop) { toast('Enter start and stop times'); return; }
+    const gross = computeRangeHours(start, stop);
+    if (gross == null || gross <= 0 || gross > 24) { toast('Invalid time range'); return; }
+    const lunch = lunchHoursDeduction();
+    const finalHours = Math.max(0, gross - lunch);
+    if (finalHours <= 0) { toast('Hours after lunch deduction is zero'); return; }
+    const baseNote = `${start}–${stop}`;
+    const lunchTag = lunch > 0 ? ` (−${settings.lunchMinutes}min lunch)` : '';
+    const fullNote = note ? `${note} · ${baseNote}${lunchTag}` : `${baseNote}${lunchTag}`;
+    const entry = {
+      id: 'r' + Date.now() + Math.random().toString(36).slice(2, 6),
+      date,
+      hours: Math.round(finalHours * 100) / 100,
+      note: fullNote,
+      created: Date.now(),
+      source: 'range',
+      start,
+      stop,
+      lunch: lunch > 0 ? settings.lunchMinutes : 0
+    };
+    entries.push(entry);
+    saveEntries();
+    $('m-r-note').value = '';
+    updatePreview();
+    renderAll();
+    toast(`Added ${entry.hours}h on ${prettyDate(date)}`);
+  }
+
+  function deleteEntry(id) {
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    if (!confirm(`Delete ${e.hours}h on ${prettyDate(e.date)}?`)) return;
+    entries = entries.filter(x => x.id !== id);
+    saveEntries();
+    renderAll();
+    toast('Entry deleted');
+  }
+
+  function exportCSV() {
+    const DELIM = ';';
+    const rows = [['date','day','hours','note','source','iso_week']];
+    const sorted = [...entries].sort((a, b) => a.date < b.date ? -1 : 1);
+    for (const e of sorted) {
+      rows.push([
+        e.date,
+        dayName(e.date),
+        e.hours.toFixed(2).replace('.', ','), // Danish decimal comma
+        '"' + (e.note || '').replace(/"/g, '""') + '"',
+        e.source || '',
+        isoWeekKey(e.date)
+      ]);
+    }
+    const csv = '\uFEFF' + rows.map(r => r.join(DELIM)).join('\r\n');
+    download(csv, `flextide_${todayISO()}.csv`, 'text/csv;charset=utf-8');
+    toast('CSV downloaded');
+  }
+
+  function exportJSON() {
+    const payload = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      settings,
+      entries
+    };
+    download(JSON.stringify(payload, null, 2), `flextide_backup_${todayISO()}.json`, 'application/json');
+    toast('Backup saved');
+  }
+
+  function download(content, filename, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function importJSON(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!data.entries || !Array.isArray(data.entries)) throw new Error('Invalid file');
+        const replace = confirm(
+          `Import ${data.entries.length} entries?\n\nOK = replace existing data\nCancel = merge with existing`
+        );
+        if (replace) {
+          entries = data.entries;
+        } else {
+          const seen = new Set(entries.map(e => e.id));
+          for (const e of data.entries) {
+            if (!seen.has(e.id)) entries.push(e);
+          }
+        }
+        if (data.settings) {
+          settings = { ...DEFAULT_SETTINGS, ...data.settings };
+          saveSettings();
+          loadSettingsIntoForm();
+        }
+        saveEntries();
+        renderAll();
+        toast(`Imported ${data.entries.length} entries`);
+      } catch (err) {
+        toast('Could not read that file');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function clearAll() {
+    if (!confirm('Delete all entries and reset? This cannot be undone.')) return;
+    if (!confirm('Really? Last chance.')) return;
+    entries = [];
+    timer = null;
+    saveEntries();
+    saveTimer();
+    stopTick();
+    renderTimer();
+    renderAll();
+    toast('Everything cleared');
+  }
+
+  function loadSettingsIntoForm() {
+    $('set-daily').value = settings.dailyTarget;
+    $('set-weekly').value = settings.weeklyTarget;
+    $('set-monthly').value = settings.monthlyTarget;
+    $('set-lunch').value = settings.lunchMinutes;
+    $('m-lunch-mins').textContent = settings.lunchMinutes;
+  }
+
+  function bindSettings() {
+    const handler = () => {
+      const d = parseFloat($('set-daily').value);
+      const w = parseFloat($('set-weekly').value);
+      const m = parseFloat($('set-monthly').value);
+      const l = parseFloat($('set-lunch').value);
+      if (d > 0 && d <= 24) settings.dailyTarget = d;
+      if (w > 0 && w <= 168) settings.weeklyTarget = w;
+      if (m > 0 && m <= 744) settings.monthlyTarget = m;
+      if (!isNaN(l) && l >= 0 && l <= 180) settings.lunchMinutes = l;
+      saveSettings();
+      $('m-lunch-mins').textContent = settings.lunchMinutes;
+      updatePreview();
+      renderAll();
+    };
+    ['set-daily','set-weekly','set-monthly','set-lunch'].forEach(id => {
+      $(id).addEventListener('change', handler);
+    });
+  }
+
+  // ---- Init ----
+  function init() {
+    loadAll();
+    $('m-date').value = todayISO();
+    $('m-r-date').value = todayISO();
+    $('today-meta').textContent = new Date().toLocaleDateString('en-GB', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+    loadSettingsIntoForm();
+    bindSettings();
+    renderAll();
+    renderTimer();
+    if (timer) startTick();
+    updatePreview();
+
+    $('timer-toggle').addEventListener('click', () => {
+      if (timer) stopTimer(); else startTimer();
+    });
+    $('timer-note').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !timer) startTimer();
+    });
+
+    // Mode toggle
+    document.querySelectorAll('.mode-btn').forEach(b => {
+      b.addEventListener('click', () => setManualMode(b.getAttribute('data-mode')));
+    });
+
+    // Hours mode
+    $('m-add').addEventListener('click', addManual);
+    ['m-hours','m-note'].forEach(id => {
+      $(id).addEventListener('keydown', (e) => { if (e.key === 'Enter') addManual(); });
+    });
+    $('m-hours').addEventListener('input', updatePreview);
+
+    // Range mode
+    $('m-r-add').addEventListener('click', addRange);
+    ['m-r-start','m-r-stop','m-r-note'].forEach(id => {
+      $(id).addEventListener('keydown', (e) => { if (e.key === 'Enter') addRange(); });
+    });
+    ['m-r-start','m-r-stop'].forEach(id => {
+      $(id).addEventListener('input', updatePreview);
+      $(id).addEventListener('change', updatePreview);
+    });
+
+    // Keep both date inputs in sync
+    $('m-date').addEventListener('change', () => { $('m-r-date').value = $('m-date').value; });
+    $('m-r-date').addEventListener('change', () => { $('m-date').value = $('m-r-date').value; });
+
+    // Lunch checkbox
+    $('m-lunch').addEventListener('change', updatePreview);
+
+    $('btn-export').addEventListener('click', exportCSV);
+    $('btn-export-json').addEventListener('click', exportJSON);
+    $('btn-clear').addEventListener('click', clearAll);
+    $('btn-import').addEventListener('click', () => $('import-file').click());
+    $('import-file').addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      if (f) importJSON(f);
+      e.target.value = '';
+    });
+
+    // Calendar navigation
+    $('cal-prev').addEventListener('click', () => {
+      if (calCursor.month === 0) {
+        calCursor.year -= 1;
+        calCursor.month = 11;
+      } else {
+        calCursor.month -= 1;
+      }
+      renderCalendar();
+    });
+    $('cal-next').addEventListener('click', () => {
+      if (calCursor.month === 11) {
+        calCursor.year += 1;
+        calCursor.month = 0;
+      } else {
+        calCursor.month += 1;
+      }
+      renderCalendar();
+    });
+    $('cal-today').addEventListener('click', () => {
+      const d = new Date();
+      calCursor = { year: d.getFullYear(), month: d.getMonth() };
+      renderCalendar();
+    });
+    $('filter-clear').addEventListener('click', clearFilter);
+
+    // Sync wiring
+    $('btn-sync-save').addEventListener('click', connectSync);
+    $('btn-sync-pull').addEventListener('click', () => {
+      if (!syncConfig) { logSync('Not connected', 'error'); return; }
+      pullFromGist();
+    });
+    $('btn-sync-push').addEventListener('click', () => {
+      if (!syncConfig) { logSync('Not connected', 'error'); return; }
+      pushToGist({ force: true });
+    });
+    $('btn-sync-disconnect').addEventListener('click', disconnectSync);
+
+    // Pre-fill sync inputs if already connected
+    if (syncConfig) {
+      $('sync-gist-id').value = syncConfig.gistId;
+      $('sync-token').value = syncConfig.token;
+      updateSyncBadge();
+      // Auto-pull on load
+      setTimeout(() => pullFromGist({ silent: false }), 250);
+    }
+
+    // Pull when tab regains focus (catches changes made on another device)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) return;
+      if (timer) renderTimer();
+      if (syncConfig && Date.now() - lastSyncMtime > 30000) {
+        pullFromGist({ silent: true });
+      }
+    });
+
+    // Flush any pending push before unload
+    window.addEventListener('beforeunload', () => {
+      if (syncDebounceHandle) {
+        clearTimeout(syncDebounceHandle);
+        // Best-effort synchronous push via sendBeacon if available
+        if (syncConfig && navigator.sendBeacon) {
+          // Note: sendBeacon doesn't support PATCH, so we just skip — the next load will pull anyway
+        }
+      }
+    });
+
+    // Refresh stats once a minute (so "today" rolls over correctly around midnight)
+    setInterval(() => {
+      $('today-meta').textContent = new Date().toLocaleDateString('en-GB', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      });
+      renderStats();
+    }, 60000);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
