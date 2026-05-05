@@ -1829,7 +1829,8 @@
     timer: 'flextide.timer.v1',
     settings: 'flextide.settings.v1',
     sync: 'flextide.sync.v1',
-    lastSync: 'flextide.lastSync.v1'
+    lastSync: 'flextide.lastSync.v1',
+    dataMtime: 'flextide.dataMtime.v1'
   };
 
   const DEFAULT_SETTINGS = {
@@ -1881,10 +1882,15 @@
       const ls = localStorage.getItem(STORAGE.lastSync);
       lastSyncMtime = ls ? parseInt(ls, 10) : 0;
     } catch { lastSyncMtime = 0; }
+    try {
+      const dm = localStorage.getItem(STORAGE.dataMtime);
+      lastDataMtime = dm ? parseInt(dm, 10) : 0;
+    } catch { lastDataMtime = 0; }
   }
   function saveEntries() {
     localStorage.setItem(STORAGE.entries, JSON.stringify(entries));
     lastDataMtime = Date.now();
+    localStorage.setItem(STORAGE.dataMtime, String(lastDataMtime));
     schedulePush();
   }
   function saveTimer() {
@@ -1894,6 +1900,7 @@
   function saveSettings() {
     localStorage.setItem(STORAGE.settings, JSON.stringify(settings));
     lastDataMtime = Date.now();
+    localStorage.setItem(STORAGE.dataMtime, String(lastDataMtime));
     schedulePush();
   }
   function saveSyncConfig() {
