@@ -2407,12 +2407,30 @@
       const deltaClass = delta > 0.01 ? 'pos' : (delta < -0.01 ? 'neg' : '');
       const absLabel = absenceCount > 0 ? ` · ${absenceCount} absence${absenceCount === 1 ? '' : 's'}` : '';
       const label = isCurrent ? `${g.key} · current` : g.key;
+      // Pre-compute day totals (work-only hours per date) so multi-entry days
+      // show the day's combined delta rather than each entry's individual deviation
+      const dayTotals = {};
+      const dayWorkCounts = {};
+      for (const e of g.list) {
+        if (isCountedKind(entryKind(e))) {
+          dayTotals[e.date] = (dayTotals[e.date] || 0) + e.hours;
+          dayWorkCounts[e.date] = (dayWorkCounts[e.date] || 0) + 1;
+        }
+      }
       const rows = g.list.map(e => {
         const kind = entryKind(e);
         const isWork = isCountedKind(kind);
-        const d = isWork ? (e.hours - settings.dailyTarget) : 0;
+        // For multi-entry days, use the day's combined hours so the delta
+        // reflects the day's actual flex contribution. For single-entry days
+        // this equals e.hours, so behavior matches the old per-entry delta.
+        const dayHours = isWork ? (dayTotals[e.date] || e.hours) : 0;
+        const isMultiEntry = isWork && dayWorkCounts[e.date] > 1;
+        const d = isWork ? (dayHours - settings.dailyTarget) : 0;
         const dClass = !isWork ? 'zero' : (d > 0.01 ? 'pos' : (d < -0.01 ? 'neg' : 'zero'));
         const dStr = isWork ? fmtSigned(d) : '—';
+        const dTitle = isMultiEntry
+          ? `Day total: ${dayHours.toFixed(2)}h · ${fmtSigned(d)} vs daily target`
+          : (isWork ? `${e.hours.toFixed(2)}h vs ${settings.dailyTarget}h daily target` : '');
         const note = e.note ? escapeHTML(e.note) : '<span class="empty">no note</span>';
         const kindBadge = !isWork
           ? `<span class="entry-kind kind-${kind}">${ENTRY_KINDS[kind].label}</span>`
@@ -2431,7 +2449,7 @@
           </div>
           <div class="entry-hours">${hoursLabel}</div>
           <div class="entry-note">${note}${kindBadge}${catPill}${tagBadges}</div>
-          <div class="entry-delta ${dClass}">${dStr}</div>
+          <div class="entry-delta ${dClass}" title="${dTitle}">${dStr}</div>
           <button class="entry-edit" data-edit="${e.id}" aria-label="Edit entry" title="Edit">✎</button>
           <button class="entry-delete" data-id="${e.id}" aria-label="Delete entry">×</button>
         </div>`;
