@@ -804,10 +804,27 @@
     }
     .entry-date { grid-column: 1; grid-row: 1; }
     .entry-hours { grid-column: 2; grid-row: 1; text-align: right; }
-    .entry-note { grid-column: 1 / 5; grid-row: 2; }
+    .entry-note {
+      grid-column: 1 / 5;
+      grid-row: 2;
+      white-space: normal;
+      overflow: visible;
+      word-break: break-word;
+      line-height: 1.5;
+    }
     .entry-delta { grid-column: 2; grid-row: 2; display: none; }
     .entry-edit { grid-column: 3; grid-row: 1; align-self: center; }
     .entry-delete { grid-column: 4; grid-row: 1; align-self: center; }
+    .entry-cat, .entry-tag, .entry-kind {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+    }
+    .entry-tag { margin-left: 0; margin-right: 4px; margin-top: 2px; }
+    .entry-cat { margin-left: 0; margin-right: 6px; margin-top: 2px; }
+    .entry-row { padding: 12px 14px; }
   }
   .calendar-card {
     background: var(--bg-card);
@@ -1452,6 +1469,229 @@
     background: var(--bg-card);
     border: 1px solid var(--line);
     padding: 20px 24px;
+  }
+  /* ===========================================================
+     MOBILE OVERRIDES (consolidated)
+     Applied on top of section-specific rules above.
+     =========================================================== */
+  @media (max-width: 640px) {
+    html, body { overflow-x: hidden; }
+    .container {
+      padding: 20px 16px 60px;
+      max-width: 100%;
+    }
+    /* Header */
+    .masthead {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .masthead > div:last-child { text-align: left; align-self: stretch; }
+    .brand { font-size: 26px; }
+    .meta { font-size: 10px; }
+
+    /* Stats: 2x2 grid on mobile */
+    .stats, .stats.stats-4 {
+      grid-template-columns: repeat(2, 1fr);
+      margin-bottom: 28px;
+    }
+    .stat { padding: 14px 14px; }
+    .stat-value { font-size: 24px; }
+    .stat-label { font-size: 9px; margin-bottom: 8px; }
+    .stat-sub { font-size: 11px; }
+
+    /* Section spacing tighter */
+    .section { margin-bottom: 28px; }
+    .section-title { font-size: 11px; margin-bottom: 12px; }
+
+    /* Timer card */
+    .timer-card {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 18px 18px;
+    }
+    .timer-display { font-size: 36px; text-align: center; }
+    .timer-controls {
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+      width: 100%;
+    }
+    .timer-controls > * { width: 100%; max-width: 100%; }
+    .timer-category { max-width: 100%; }
+    .timer-note { width: 100%; }
+    #timer-toggle { padding: 12px; font-size: 15px; }
+
+    /* Quick actions */
+    .quick-actions {
+      gap: 6px;
+    }
+    .quick-actions .quick-kind-group {
+      margin-left: 0;
+      width: 100%;
+      gap: 6px;
+    }
+    .quick-btn {
+      padding: 6px 10px;
+      font-size: 11px;
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    #qa-fill-gaps { font-size: 10px; }
+
+    /* Manual entry card */
+    .manual-card { padding: 18px 16px; }
+    .manual-grid > button,
+    .manual-grid.range-grid > button { width: 100%; padding: 12px; }
+    .lunch-row { gap: 10px; }
+    .checkbox-label { font-size: 12px; }
+    .lunch-preview { font-size: 11px; width: 100%; }
+
+    /* Calendar */
+    .calendar-card { padding: 14px 12px; }
+    .cal-header { flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .cal-month-label { font-size: 18px; }
+    .cal-grid { gap: 2px; }
+    .cal-cell {
+      min-height: 38px;
+      padding: 3px 4px;
+    }
+    .cal-day-num { font-size: 10px; }
+    .cal-day-hours { font-size: 9px; }
+    .cal-dow { font-size: 9px; padding: 4px 0 6px; }
+    .cal-legend {
+      gap: 8px 12px;
+      font-size: 9px;
+    }
+    .cal-summary {
+      gap: 12px;
+      font-size: 11px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .cal-prev-compare {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .cal-prev-stats { font-size: 11px; }
+
+    /* Chart */
+    .chart-card { padding: 14px 12px; }
+    .chart-svg-wrap { overflow-x: auto; }
+    #weekly-chart { min-width: 480px; }
+    .chart-legend { font-size: 11px; gap: 10px; }
+    .chart-avg { width: 100%; margin-left: 0; margin-top: 4px; }
+
+    /* Category breakdown */
+    .cat-section-header { flex-wrap: wrap; gap: 8px; }
+    .cat-section-header .entries-filter { font-size: 11px; }
+    .cat-row-name { font-size: 12px; }
+    .cat-row-stats { font-size: 10px; }
+
+    /* Recent entries */
+    .entries-toolbar { flex-wrap: wrap; gap: 8px; }
+    .entries-toolbar .section-title { width: auto; flex: 1; }
+    .entries-filter { font-size: 11px; max-width: 50%; }
+    .week-header {
+      padding: 10px 14px;
+      font-size: 10px;
+    }
+
+    /* Filter banner */
+    .filter-banner {
+      padding: 10px 12px;
+      font-size: 12px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    /* Settings panel */
+    .settings-panel { padding: 16px 14px; }
+    .settings-row { gap: 12px 16px; }
+    .settings-row label { font-size: 12px; }
+    .settings-row input[type="number"] { width: 60px; font-size: 12px; }
+    .toolbar-actions { flex-wrap: wrap; gap: 6px; }
+    .toolbar-actions button {
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: 11px;
+      padding: 6px 10px;
+      white-space: nowrap;
+    }
+    .cat-add-row { gap: 6px; }
+    .cat-add-row input[type="text"] { min-width: 0; flex: 1 1 100%; }
+    .cat-add-row input[type="color"] { width: 36px; height: 34px; }
+    #cat-add { flex: 1 1 100%; padding: 10px; }
+    .cat-item {
+      grid-template-columns: 14px 1fr auto;
+      gap: 8px;
+      padding: 8px 10px;
+    }
+    .cat-item-count { display: none; }
+    .sync-section { padding-top: 16px; margin-top: 16px; }
+    .sync-help { font-size: 11px; }
+
+    /* Modal */
+    .modal-backdrop { padding: 10px; align-items: flex-end; }
+    .modal {
+      max-height: calc(100vh - 20px);
+      border-radius: 8px;
+    }
+    .modal-header { padding: 14px 18px; }
+    .modal-title { font-size: 17px; }
+    .modal-body { padding: 16px 18px; gap: 12px; }
+    .modal-footer { padding: 14px 18px; }
+    .modal-footer button { flex: 1; padding: 12px; }
+    .modal-grid { gap: 10px; }
+
+    /* Mode toggle */
+    .mode-toggle { width: 100%; margin-bottom: 14px; }
+    .mode-btn { flex: 1; padding: 8px 8px; font-size: 11px; }
+    /* Modal mode toggle row should span both columns */
+    #edit-mode-row { grid-template-columns: 1fr; }
+    #edit-mode-row .mode-toggle { display: flex; }
+
+    /* Sync status pill in masthead — wider hit area */
+    .sync-status { font-size: 10px; padding: 4px 10px; }
+
+    /* Inputs sized for touch */
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="time"],
+    select {
+      font-size: 16px; /* prevents iOS zoom on focus */
+      padding: 10px 12px;
+    }
+    button {
+      min-height: 38px;
+    }
+
+    /* Toast */
+    .toast {
+      bottom: 16px;
+      max-width: calc(100% - 32px);
+      font-size: 12px;
+    }
+
+    /* Reduce big serif headings on mobile */
+    .timer-display { font-variation-settings: "opsz" 96; }
+  }
+
+  @media (max-width: 380px) {
+    .container { padding: 16px 12px 50px; }
+    .stats, .stats.stats-4 { grid-template-columns: 1fr; }
+    .stat-value { font-size: 26px; }
+    .quick-actions .quick-kind-group { flex-direction: row; }
+    .cal-cell { min-height: 34px; }
+    .cal-day-num { font-size: 9px; }
   }
 </style>
 </head>
