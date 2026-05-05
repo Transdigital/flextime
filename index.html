@@ -916,10 +916,23 @@
   .cal-cell.selected .cal-day-num,
   .cal-cell.selected .cal-day-hours { color: var(--bg); }
   .cal-cell.has-time { background: var(--bg-card); }
-  .cal-cell.under { background: color-mix(in srgb, var(--neg-soft) 50%, var(--bg-card)); border-color: color-mix(in srgb, var(--neg) 30%, var(--line)); }
-  .cal-cell.exact { background: color-mix(in srgb, var(--pos-soft) 50%, var(--bg-card)); border-color: color-mix(in srgb, var(--pos) 30%, var(--line)); }
-  .cal-cell.over { background: var(--pos-soft); border-color: color-mix(in srgb, var(--pos) 50%, var(--line)); }
-  .cal-cell.way-over { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+  .cal-cell.under {
+    background: color-mix(in srgb, #d96458 18%, var(--bg-card));
+    border-color: color-mix(in srgb, #d96458 50%, var(--line));
+  }
+  .cal-cell.exact {
+    background: color-mix(in srgb, #4a9d6f 18%, var(--bg-card));
+    border-color: color-mix(in srgb, #4a9d6f 50%, var(--line));
+  }
+  .cal-cell.over {
+    background: color-mix(in srgb, #4a90c4 22%, var(--bg-card));
+    border-color: color-mix(in srgb, #4a90c4 55%, var(--line));
+  }
+  .cal-cell.way-over {
+    background: color-mix(in srgb, #1d5a8a 35%, var(--bg-card));
+    border-color: color-mix(in srgb, #1d5a8a 70%, var(--line));
+    color: var(--ink);
+  }
   .cal-day-num {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
@@ -962,10 +975,10 @@
     border-radius: 2px;
     border: 1px solid var(--line);
   }
-  .cal-swatch.under { background: color-mix(in srgb, var(--neg-soft) 50%, var(--bg-card)); }
-  .cal-swatch.exact { background: color-mix(in srgb, var(--pos-soft) 50%, var(--bg-card)); }
-  .cal-swatch.over { background: var(--pos-soft); }
-  .cal-swatch.way-over { background: var(--accent-soft); }
+  .cal-swatch.under { background: color-mix(in srgb, #d96458 18%, var(--bg-card)); border-color: color-mix(in srgb, #d96458 50%, var(--line)); }
+  .cal-swatch.exact { background: color-mix(in srgb, #4a9d6f 18%, var(--bg-card)); border-color: color-mix(in srgb, #4a9d6f 50%, var(--line)); }
+  .cal-swatch.over { background: color-mix(in srgb, #4a90c4 22%, var(--bg-card)); border-color: color-mix(in srgb, #4a90c4 55%, var(--line)); }
+  .cal-swatch.way-over { background: color-mix(in srgb, #1d5a8a 35%, var(--bg-card)); border-color: color-mix(in srgb, #1d5a8a 70%, var(--line)); }
   .cal-summary {
     display: flex;
     gap: 24px;
@@ -2571,15 +2584,41 @@
     document.querySelectorAll('.cal-cell[data-date]').forEach(cell => {
       const date = cell.getAttribute('data-date');
       if (date > today) return;
-      const handler = () => {
+      const dayEntries = entries.filter(e => e.date === date);
+      // Mark cells that contain exactly one entry as directly-editable (visual hint via title)
+      if (dayEntries.length === 1) {
+        cell.title = 'Click to filter, double-click to edit';
+      } else if (dayEntries.length > 1) {
+        cell.title = `${dayEntries.length} entries — click to filter`;
+      }
+      const filterHandler = () => {
         dayFilter = (dayFilter === date) ? null : date;
         renderAll();
       };
-      cell.addEventListener('click', handler);
+      const editHandler = () => {
+        if (dayEntries.length === 1) {
+          openEditModal(dayEntries[0].id);
+        } else if (dayEntries.length > 1) {
+          // Multiple entries: filter to that day so user can pick which one
+          dayFilter = date;
+          renderAll();
+          // Scroll to the filtered list for visibility
+          const list = $('entries-list');
+          if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      };
+      cell.addEventListener('click', filterHandler);
+      cell.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+        editHandler();
+      });
       cell.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (e.key === 'Enter') {
           e.preventDefault();
-          handler();
+          editHandler();
+        } else if (e.key === ' ') {
+          e.preventDefault();
+          filterHandler();
         }
       });
     });
