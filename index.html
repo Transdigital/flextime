@@ -97,6 +97,303 @@
     border: 1px solid var(--line);
     margin-bottom: 40px;
   }
+  .stats.stats-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width: 900px) {
+    .stats.stats-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .stats, .stats.stats-4 { grid-template-columns: 1fr; }
+  }
+  /* Quick actions */
+  .quick-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    align-items: center;
+  }
+  .quick-actions .quick-kind-group {
+    display: inline-flex;
+    gap: 6px;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 640px) {
+    .quick-actions .quick-kind-group { margin-left: 0; }
+  }
+  .quick-btn {
+    background: var(--bg-card);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.12s, background 0.12s;
+  }
+  .quick-btn:hover { border-color: var(--ink); opacity: 1; }
+  .quick-btn.quick-vac { color: #5b8def; }
+  .quick-btn.quick-sick { color: #a8341c; }
+  .quick-btn.quick-hol { color: #9b6ddb; }
+  /* Kind badge on entry rows */
+  .entry-kind {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    display: inline-block;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .entry-kind.kind-vacation { background: #e8efff; border-color: #b9c9f0; color: #3960b8; }
+  .entry-kind.kind-sick { background: #fbe5e0; border-color: #e8b5a8; color: #8a2a18; }
+  .entry-kind.kind-holiday { background: #f0e5fb; border-color: #d3bdef; color: #6e3fb3; }
+  @media (prefers-color-scheme: dark) {
+    .entry-kind.kind-vacation { background: #20283a; border-color: #2f4068; color: #91afe6; }
+    .entry-kind.kind-sick { background: #3a1c14; border-color: #5c2c20; color: #d88a78; }
+    .entry-kind.kind-holiday { background: #2c1c3c; border-color: #4a2e64; color: #b48ce0; }
+  }
+  /* Edit button */
+  .entry-edit {
+    background: transparent;
+    border: none;
+    color: var(--ink-faint);
+    font-size: 13px;
+    padding: 4px;
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    line-height: 1;
+    border-radius: 50%;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .entry-edit:hover { color: var(--accent); background: var(--accent-soft); }
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fade-in 0.15s ease;
+  }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 520px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .modal-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .modal-close {
+    background: transparent;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+    width: 32px;
+    height: 32px;
+  }
+  .modal-close:hover { color: var(--ink); }
+  .modal-body {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .modal-grid > div { min-width: 0; }
+  .modal-grid input,
+  .modal-grid select { width: 100%; }
+  select {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    outline: none;
+    cursor: pointer;
+  }
+  select:focus { border-color: var(--accent); }
+  .modal-preview {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-faint);
+    padding: 8px 12px;
+    background: var(--bg);
+    border-radius: var(--radius);
+    min-height: 16px;
+  }
+  .modal-preview strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  /* Calendar absence color (subtle, distinguishable from work overtime) */
+  .cal-cell.absence {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--bg-card),
+      var(--bg-card) 4px,
+      var(--bg) 4px,
+      var(--bg) 8px
+    );
+  }
+  .cal-cell.absence-vacation { border-color: #b9c9f0; }
+  .cal-cell.absence-sick { border-color: #e8b5a8; }
+  .cal-cell.absence-holiday { border-color: #d3bdef; }
+  .cal-prev-compare {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line-soft);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  @media (max-width: 640px) {
+    .cal-prev-compare { grid-template-columns: 1fr; }
+  }
+  .cal-prev-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cal-prev-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .cal-prev-stats {
+    display: flex;
+    gap: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .cal-prev-stats strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  /* Chart */
+  .chart-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 24px 28px;
+  }
+  .chart-svg-wrap {
+    width: 100%;
+    overflow-x: auto;
+  }
+  #weekly-chart {
+    width: 100%;
+    height: auto;
+    min-height: 200px;
+    display: block;
+  }
+  .chart-bar {
+    transition: opacity 0.15s;
+    cursor: default;
+  }
+  .chart-bar:hover { opacity: 0.85; }
+  .chart-axis-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    fill: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .chart-bar-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    fill: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .chart-target-line {
+    stroke: var(--accent);
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+  }
+  .chart-baseline { stroke: var(--line); stroke-width: 1; }
+  .chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 12px;
+    color: var(--ink-soft);
+    flex-wrap: wrap;
+  }
+  .chart-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chart-bar-sample {
+    width: 14px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 2px;
+  }
+  .chart-bar-sample.work { background: var(--ink-soft); }
+  .chart-bar-sample.target { background: transparent; border-top: 2px dashed var(--accent); height: 0; }
+  .chart-avg {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .chart-avg strong { color: var(--ink); font-weight: 500; }
   .stat {
     background: var(--bg-card);
     padding: 24px 28px;
@@ -436,8 +733,8 @@
   .week-delta.neg { color: var(--neg); }
   .entry-row {
     display: grid;
-    grid-template-columns: 100px 80px 1fr 80px 36px;
-    gap: 16px;
+    grid-template-columns: 100px 80px 1fr 80px 28px 28px;
+    gap: 12px;
     padding: 14px 24px;
     align-items: center;
     border-bottom: 1px solid var(--line-soft);
@@ -501,15 +798,16 @@
   }
   @media (max-width: 640px) {
     .entry-row {
-      grid-template-columns: 1fr auto 28px;
+      grid-template-columns: 1fr auto 28px 28px;
       grid-template-rows: auto auto;
-      gap: 6px 12px;
+      gap: 6px 10px;
     }
     .entry-date { grid-column: 1; grid-row: 1; }
     .entry-hours { grid-column: 2; grid-row: 1; text-align: right; }
-    .entry-note { grid-column: 1 / 3; grid-row: 2; }
-    .entry-delta { grid-column: 2; grid-row: 2; }
-    .entry-delete { grid-column: 3; grid-row: 1 / 3; align-self: center; }
+    .entry-note { grid-column: 1 / 5; grid-row: 2; }
+    .entry-delta { grid-column: 2; grid-row: 2; display: none; }
+    .entry-edit { grid-column: 3; grid-row: 1; align-self: center; }
+    .entry-delete { grid-column: 4; grid-row: 1; align-self: center; }
   }
   .calendar-card {
     background: var(--bg-card);
@@ -826,6 +1124,245 @@
     flex-wrap: wrap;
     gap: 8px;
   }
+  /* Categories & tags */
+  .cat-tags-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+  }
+  @media (max-width: 640px) {
+    .cat-tags-row { grid-template-columns: 1fr; }
+  }
+  .field-hint {
+    color: var(--ink-faint);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: normal;
+  }
+  .timer-category {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    background: var(--bg);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    max-width: 140px;
+    cursor: pointer;
+  }
+  .timer-category:focus { border-color: var(--accent); outline: none; }
+  /* Category pill on entry rows */
+  .entry-cat {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 10px;
+    color: white;
+    display: inline-block;
+    margin-left: 6px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  /* Tag chip */
+  .entry-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+    vertical-align: middle;
+    display: inline-block;
+  }
+  /* Category management */
+  .cat-manage-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .cat-manage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .cat-manage-title {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .cat-manage-help {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .cat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .cat-item {
+    display: grid;
+    grid-template-columns: 14px 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .cat-item-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid var(--line);
+  }
+  .cat-item-name {
+    font-size: 13px;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 4px 6px;
+    border-radius: 3px;
+    width: 100%;
+    font-family: inherit;
+  }
+  .cat-item-name:focus {
+    border-color: var(--accent);
+    background: var(--bg-card);
+  }
+  .cat-item-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .cat-item-delete {
+    background: transparent;
+    border: none;
+    color: var(--ink-faint);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 50%;
+    line-height: 1;
+    width: 26px;
+    height: 26px;
+  }
+  .cat-item-delete:hover { color: var(--neg); background: var(--neg-soft); }
+  .cat-add-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .cat-add-row input[type="text"] {
+    flex: 1;
+    min-width: 180px;
+  }
+  .cat-add-row input[type="color"] {
+    width: 40px;
+    height: 38px;
+    padding: 2px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    cursor: pointer;
+  }
+  .cat-empty {
+    padding: 16px;
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 12px;
+    font-style: italic;
+    background: var(--bg);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+  }
+  /* Entries filter dropdown */
+  .entries-filter {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    background: var(--bg);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 4px 8px;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .entries-filter:focus { border-color: var(--accent); outline: none; }
+  .entries-toolbar select { margin-left: auto; }
+  /* Category breakdown */
+  .cat-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+  .cat-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .cat-row {
+    display: grid;
+    grid-template-columns: 12px 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+  .cat-row-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .cat-row-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cat-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .cat-row-name { color: var(--ink); font-weight: 500; }
+  .cat-row-stats {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .cat-row-bar-track {
+    height: 6px;
+    background: var(--line-soft);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .cat-row-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  .cat-breakdown-empty {
+    padding: 30px;
+    text-align: center;
+    color: var(--ink-faint);
+    font-style: italic;
+    font-size: 13px;
+  }
   .footer a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted var(--ink-faint); }
   .footer a:hover { color: var(--accent); border-color: var(--accent); }
   .toast {
@@ -900,7 +1437,7 @@
     </div>
   </header>
 
-  <section class="stats" aria-label="Summary">
+  <section class="stats stats-4" aria-label="Summary">
     <div class="stat">
       <div class="stat-label">Flex balance</div>
       <div class="stat-value" id="balance-value">0h 0m</div>
@@ -918,6 +1455,11 @@
       <div class="stat-sub" id="month-sub">of 160.33h target</div>
       <div class="stat-progress"><div class="stat-progress-bar" id="month-bar" style="width: 0%"></div></div>
     </div>
+    <div class="stat">
+      <div class="stat-label">Year to date</div>
+      <div class="stat-value" id="ytd-value">0h 0m</div>
+      <div class="stat-sub" id="ytd-sub">flex · 0 days worked</div>
+    </div>
   </section>
 
   <section class="section">
@@ -925,6 +1467,9 @@
     <div class="timer-card">
       <div class="timer-display" id="timer-display">00:00:00</div>
       <div class="timer-controls">
+        <select id="timer-category" class="timer-category" title="Category">
+          <option value="">No category</option>
+        </select>
         <input type="text" id="timer-note" class="timer-note" placeholder="What are you working on?" maxlength="120">
         <button id="timer-toggle" class="accent">Start</button>
       </div>
@@ -933,6 +1478,15 @@
 
   <section class="section">
     <div class="section-title">Add manually</div>
+    <div class="quick-actions">
+      <button class="quick-btn" id="qa-default-day" title="Add an 8:00–16:00 day with lunch deducted">+ Default day</button>
+      <button class="quick-btn" id="qa-fill-gaps" title="Fill missing weekdays since the last entry">+ Fill missing weekdays…</button>
+      <span class="quick-kind-group">
+        <button class="quick-btn quick-vac" data-quick-kind="vacation" title="Mark today as vacation">+ Vacation</button>
+        <button class="quick-btn quick-sick" data-quick-kind="sick" title="Mark today as sick">+ Sick</button>
+        <button class="quick-btn quick-hol" data-quick-kind="holiday" title="Mark today as a public holiday">+ Holiday</button>
+      </span>
+    </div>
     <div class="manual-card">
       <div class="mode-toggle" role="tablist" aria-label="Entry mode">
         <button type="button" class="mode-btn active" data-mode="hours" role="tab" aria-selected="true">Hours</button>
@@ -975,6 +1529,20 @@
         <button id="m-r-add">Add entry</button>
       </div>
 
+      <div class="cat-tags-row">
+        <div>
+          <label class="field-label" for="m-category">Category</label>
+          <select id="m-category" class="full">
+            <option value="">— None —</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" for="m-tags">Tags <span class="field-hint">(comma-separated)</span></label>
+          <input type="text" id="m-tags" class="full" placeholder="e.g. meeting, deepwork" autocomplete="off" list="m-tags-list">
+          <datalist id="m-tags-list"></datalist>
+        </div>
+      </div>
+
       <div class="lunch-row">
         <label class="checkbox-label">
           <input type="checkbox" id="m-lunch" checked>
@@ -1005,6 +1573,37 @@
         <div class="cal-legend-item"><span class="cal-swatch way-over"></span>Heavy (&gt;+2h)</div>
       </div>
       <div class="cal-summary" id="cal-summary"></div>
+      <div class="cal-prev-compare" id="cal-prev-compare"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Last 12 weeks</div>
+    <div class="chart-card">
+      <div class="chart-svg-wrap">
+        <svg id="weekly-chart" viewBox="0 0 700 240" preserveAspectRatio="xMidYMid meet" aria-label="Bar chart of weekly hours over the last 12 weeks"></svg>
+      </div>
+      <div class="chart-legend">
+        <span class="chart-legend-item"><span class="chart-bar-sample work"></span>Worked</span>
+        <span class="chart-legend-item"><span class="chart-bar-sample target"></span>37.5h target</span>
+        <span class="chart-avg" id="chart-avg"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="cat-section-header">
+      <div class="section-title" style="margin-bottom: 0;">Time by category</div>
+      <select id="cat-chart-period" class="entries-filter">
+        <option value="month">This month</option>
+        <option value="30d" selected>Last 30 days</option>
+        <option value="90d">Last 90 days</option>
+        <option value="ytd">Year to date</option>
+        <option value="all">All time</option>
+      </select>
+    </div>
+    <div class="chart-card">
+      <div id="cat-breakdown" class="cat-breakdown"></div>
     </div>
   </section>
 
@@ -1041,6 +1640,21 @@
           Data stays in this browser only. Export a JSON backup occasionally if you depend on it. Import to move between browsers or devices.
         </div>
 
+        <div class="cat-manage-section">
+          <div class="cat-manage-header">
+            <span class="cat-manage-title">Categories</span>
+          </div>
+          <div class="cat-manage-help">
+            Pre-defined buckets for the work you do. Used to break down hours by category. Tags (free-text on each entry) sit on top.
+          </div>
+          <div id="cat-list" class="cat-list"></div>
+          <div class="cat-add-row">
+            <input type="text" id="cat-new-name" placeholder="New category name" maxlength="40">
+            <input type="color" id="cat-new-color" value="#5b8def" title="Color">
+            <button class="ghost" id="cat-add">+ Add category</button>
+          </div>
+        </div>
+
         <div class="sync-section">
           <div class="sync-header">
             <span class="sync-title">Sync via GitHub Gist</span>
@@ -1074,6 +1688,9 @@
   <section class="section">
     <div class="entries-toolbar">
       <div class="section-title">Recent entries</div>
+      <select id="entries-filter-cat" class="entries-filter" title="Filter by category">
+        <option value="">All categories</option>
+      </select>
     </div>
     <div id="filter-banner" class="filter-banner" style="display: none;">
       <span id="filter-banner-text"></span>
@@ -1088,6 +1705,83 @@
     <span>Flextide · single file · runs offline</span>
     <span id="entry-count">0 entries</span>
   </footer>
+</div>
+
+<div class="modal-backdrop" id="edit-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="edit-modal-title">Edit entry</div>
+      <button class="modal-close" id="edit-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div>
+          <label class="field-label" for="edit-date">Date</label>
+          <input type="date" id="edit-date" class="full">
+        </div>
+        <div>
+          <label class="field-label" for="edit-kind">Kind</label>
+          <select id="edit-kind" class="full">
+            <option value="work">Work</option>
+            <option value="vacation">Vacation</option>
+            <option value="sick">Sick</option>
+            <option value="holiday">Holiday</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-grid" id="edit-mode-row">
+        <div class="mode-toggle" role="tablist" aria-label="Entry mode" style="margin: 0;">
+          <button type="button" class="mode-btn active" data-edit-mode="hours">Hours</button>
+          <button type="button" class="mode-btn" data-edit-mode="range">Start &amp; stop</button>
+        </div>
+      </div>
+      <div class="modal-grid" id="edit-grid-hours">
+        <div>
+          <label class="field-label" for="edit-hours">Hours</label>
+          <input type="number" id="edit-hours" step="0.25" min="0" max="24" class="full">
+        </div>
+      </div>
+      <div class="modal-grid" id="edit-grid-range" style="display: none;">
+        <div>
+          <label class="field-label" for="edit-start">Start</label>
+          <input type="time" id="edit-start" class="full">
+        </div>
+        <div>
+          <label class="field-label" for="edit-stop">Stop</label>
+          <input type="time" id="edit-stop" class="full">
+        </div>
+        <div style="grid-column: span 2;">
+          <label class="checkbox-label" style="margin-top: 6px;">
+            <input type="checkbox" id="edit-lunch">
+            <span class="checkbox-box" aria-hidden="true"></span>
+            <span class="checkbox-text">Subtract <strong id="edit-lunch-mins">30</strong> min lunch</span>
+          </label>
+        </div>
+      </div>
+      <div>
+        <label class="field-label" for="edit-note">Note</label>
+        <input type="text" id="edit-note" maxlength="120" class="full">
+      </div>
+      <div class="modal-grid" id="edit-cat-tags-row">
+        <div>
+          <label class="field-label" for="edit-category">Category</label>
+          <select id="edit-category" class="full">
+            <option value="">— None —</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" for="edit-tags">Tags <span class="field-hint">(comma-separated)</span></label>
+          <input type="text" id="edit-tags" class="full" autocomplete="off" list="edit-tags-list">
+          <datalist id="edit-tags-list"></datalist>
+        </div>
+      </div>
+      <div class="modal-preview" id="edit-preview"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="ghost" id="edit-cancel">Cancel</button>
+      <button id="edit-save">Save changes</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1108,8 +1802,16 @@
     dailyTarget: 7.5,
     weeklyTarget: 37.5,
     monthlyTarget: 160.33,
-    lunchMinutes: 30
+    lunchMinutes: 30,
+    categories: [] // [{ id, name, color }]
   };
+
+  // Soft, distinguishable color palette for categories
+  const CATEGORY_COLORS = [
+    '#5b8def', '#2d9c8f', '#d4884a', '#9b6ddb',
+    '#c44a1a', '#7ba83f', '#d6a93b', '#5a98c7',
+    '#a8341c', '#6f5db8', '#3b8d6e', '#b86a8a'
+  ];
 
   let entries = [];
   let timer = null;
@@ -1216,12 +1918,16 @@
     if (payload.settings) {
       settings = { ...DEFAULT_SETTINGS, ...payload.settings };
     }
+    if (!Array.isArray(settings.categories)) settings.categories = [];
     if (payload.mtime) lastDataMtime = payload.mtime;
     // Persist without triggering another sync
     localStorage.setItem(STORAGE.entries, JSON.stringify(entries));
     localStorage.setItem(STORAGE.settings, JSON.stringify(settings));
     if (!opts.skipRender) {
       loadSettingsIntoForm();
+      populateAllCategoryDropdowns();
+      populateAllTagDatalists();
+      renderCategoryManager();
       renderAll();
     }
   }
@@ -1467,36 +2173,108 @@
   }
 
   // ---- Calculations ----
+  // Helpers for filtering
+  function workEntries() { return entries.filter(e => isCountedKind(entryKind(e))); }
+  function absenceEntries() { return entries.filter(e => isAbsenceKind(entryKind(e))); }
+
   function workedDaysInWeek(weekKey) {
-    const days = new Set(entries.filter(e => isoWeekKey(e.date) === weekKey).map(e => e.date));
+    const days = new Set(
+      workEntries().filter(e => isoWeekKey(e.date) === weekKey).map(e => e.date)
+    );
     return days.size;
   }
+
+  // Days in a week that are absences (vacation/sick/holiday) — these excuse the missed hours
+  function absenceDaysInWeek(weekKey) {
+    const days = new Set(
+      absenceEntries().filter(e => isoWeekKey(e.date) === weekKey).map(e => e.date)
+    );
+    return days.size;
+  }
+
   function flexBalance() {
     const byWeek = {};
-    for (const e of entries) {
+    for (const e of workEntries()) {
       const wk = isoWeekKey(e.date);
       byWeek[wk] = (byWeek[wk] || 0) + e.hours;
+    }
+    // Include weeks that have only absence entries so they're excused
+    for (const e of absenceEntries()) {
+      const wk = isoWeekKey(e.date);
+      if (!(wk in byWeek)) byWeek[wk] = 0;
     }
     const today = todayISO();
     const currentWeek = isoWeekKey(today);
     let bal = 0;
     for (const wk in byWeek) {
+      const absences = absenceDaysInWeek(wk);
+      const absenceExcuse = Math.min(absences, 5) * settings.dailyTarget;
       if (wk === currentWeek) {
-        // partial week — only count expectation for days actually logged
+        // partial week — expectation = worked days * daily target, absences already excused (don't count expectation)
         bal += byWeek[wk] - workedDaysInWeek(wk) * settings.dailyTarget;
       } else {
-        bal += byWeek[wk] - settings.weeklyTarget;
+        // full week — expectation reduced by absence days (up to 5 weekdays/week)
+        bal += byWeek[wk] - Math.max(0, settings.weeklyTarget - absenceExcuse);
       }
     }
     return bal;
   }
+
   function thisWeekHours() {
     const wk = isoWeekKey(todayISO());
-    return entries.filter(e => isoWeekKey(e.date) === wk).reduce((s, e) => s + e.hours, 0);
+    return workEntries().filter(e => isoWeekKey(e.date) === wk).reduce((s, e) => s + e.hours, 0);
   }
   function thisMonthHours() {
     const mk = monthKey(todayISO());
-    return entries.filter(e => monthKey(e.date) === mk).reduce((s, e) => s + e.hours, 0);
+    return workEntries().filter(e => monthKey(e.date) === mk).reduce((s, e) => s + e.hours, 0);
+  }
+
+  function ytdFlexBalance() {
+    const year = new Date().getFullYear();
+    const yearStart = `${year}-01-01`;
+    const today = todayISO();
+    const byWeek = {};
+    for (const e of workEntries()) {
+      if (e.date < yearStart || e.date > today) continue;
+      const wk = isoWeekKey(e.date);
+      byWeek[wk] = (byWeek[wk] || 0) + e.hours;
+    }
+    for (const e of absenceEntries()) {
+      if (e.date < yearStart || e.date > today) continue;
+      const wk = isoWeekKey(e.date);
+      if (!(wk in byWeek)) byWeek[wk] = 0;
+    }
+    const currentWeek = isoWeekKey(today);
+    let bal = 0;
+    let totalHours = 0;
+    let workedDays = 0;
+    let absenceDays = 0;
+    for (const wk in byWeek) {
+      const absences = absenceEntriesInWeekInYear(wk, yearStart, today);
+      const absenceExcuse = Math.min(absences, 5) * settings.dailyTarget;
+      if (wk === currentWeek) {
+        bal += byWeek[wk] - workedDaysInWeek(wk) * settings.dailyTarget;
+      } else {
+        bal += byWeek[wk] - Math.max(0, settings.weeklyTarget - absenceExcuse);
+      }
+      totalHours += byWeek[wk];
+    }
+    for (const e of workEntries()) {
+      if (e.date < yearStart || e.date > today) continue;
+      workedDays += 1;
+    }
+    workedDays = new Set(workEntries().filter(e => e.date >= yearStart && e.date <= today).map(e => e.date)).size;
+    absenceDays = new Set(absenceEntries().filter(e => e.date >= yearStart && e.date <= today).map(e => e.date)).size;
+    return { balance: bal, totalHours, workedDays, absenceDays };
+  }
+
+  function absenceEntriesInWeekInYear(weekKey, yearStart, today) {
+    const days = new Set(
+      absenceEntries()
+        .filter(e => isoWeekKey(e.date) === weekKey && e.date >= yearStart && e.date <= today)
+        .map(e => e.date)
+    );
+    return days.size;
   }
 
   // ---- Render ----
@@ -1522,6 +2300,15 @@
     $('month-sub').textContent = `of ${settings.monthlyTarget}h target`;
     $('month-bar').style.width = Math.min(100, (mh / settings.monthlyTarget) * 100) + '%';
 
+    // YTD
+    const ytd = ytdFlexBalance();
+    const ytdEl = $('ytd-value');
+    ytdEl.textContent = fmtSigned(ytd.balance);
+    ytdEl.classList.toggle('pos', ytd.balance > 0.01);
+    ytdEl.classList.toggle('neg', ytd.balance < -0.01);
+    const absText = ytd.absenceDays > 0 ? ` · ${ytd.absenceDays} off` : '';
+    $('ytd-sub').textContent = `flex · ${ytd.workedDays} day${ytd.workedDays === 1 ? '' : 's'} worked${absText}`;
+
     $('entry-count').textContent = entries.length === 1 ? '1 entry' : `${entries.length} entries`;
   }
 
@@ -1532,7 +2319,15 @@
       return;
     }
     // Apply day filter if active
-    const source = dayFilter ? entries.filter(e => e.date === dayFilter) : entries;
+    let source = dayFilter ? entries.filter(e => e.date === dayFilter) : entries;
+    // Apply category filter
+    if (categoryFilter) {
+      if (categoryFilter === '__none__') {
+        source = source.filter(e => isCountedKind(entryKind(e)) && !e.categoryId);
+      } else {
+        source = source.filter(e => e.categoryId === categoryFilter);
+      }
+    }
     if (source.length === 0) {
       wrap.innerHTML = '<div class="entries-empty">No entries on this day.</div>';
       return;
@@ -1558,30 +2353,51 @@
     const today = todayISO();
     const currentWeek = isoWeekKey(today);
     const html = groups.slice(0, 12).map(g => {
-      const total = g.list.reduce((s, e) => s + e.hours, 0);
+      const workOnly = g.list.filter(e => isCountedKind(entryKind(e)));
+      const absenceOnly = g.list.filter(e => isAbsenceKind(entryKind(e)));
+      const total = workOnly.reduce((s, e) => s + e.hours, 0);
       const isCurrent = g.key === currentWeek;
-      const expected = isCurrent ? workedDaysInWeek(g.key) * settings.dailyTarget : settings.weeklyTarget;
+      const absenceCount = new Set(absenceOnly.map(e => e.date)).size;
+      const absenceExcuse = Math.min(absenceCount, 5) * settings.dailyTarget;
+      const expected = isCurrent
+        ? workedDaysInWeek(g.key) * settings.dailyTarget
+        : Math.max(0, settings.weeklyTarget - absenceExcuse);
       const delta = total - expected;
       const deltaClass = delta > 0.01 ? 'pos' : (delta < -0.01 ? 'neg' : '');
+      const absLabel = absenceCount > 0 ? ` · ${absenceCount} absence${absenceCount === 1 ? '' : 's'}` : '';
       const label = isCurrent ? `${g.key} · current` : g.key;
       const rows = g.list.map(e => {
-        const d = e.hours - settings.dailyTarget;
-        const dClass = d > 0.01 ? 'pos' : (d < -0.01 ? 'neg' : 'zero');
+        const kind = entryKind(e);
+        const isWork = isCountedKind(kind);
+        const d = isWork ? (e.hours - settings.dailyTarget) : 0;
+        const dClass = !isWork ? 'zero' : (d > 0.01 ? 'pos' : (d < -0.01 ? 'neg' : 'zero'));
+        const dStr = isWork ? fmtSigned(d) : '—';
         const note = e.note ? escapeHTML(e.note) : '<span class="empty">no note</span>';
+        const kindBadge = !isWork
+          ? `<span class="entry-kind kind-${kind}">${ENTRY_KINDS[kind].label}</span>`
+          : '';
+        const cat = isWork ? entryCategory(e) : null;
+        const catPill = cat
+          ? `<span class="entry-cat" style="background: ${escapeHTML(cat.color)};">${escapeHTML(cat.name)}</span>`
+          : '';
+        const tags = isWork ? entryTags(e) : [];
+        const tagBadges = tags.map(t => `<span class="entry-tag">#${escapeHTML(t)}</span>`).join('');
+        const hoursLabel = isWork ? `${e.hours.toFixed(2)}h` : `${ENTRY_KINDS[kind].short}`;
         return `<div class="entry-row">
           <div>
             <div class="entry-date">${prettyDate(e.date)}</div>
             <div class="entry-day">${dayName(e.date)}</div>
           </div>
-          <div class="entry-hours">${e.hours.toFixed(2)}h</div>
-          <div class="entry-note">${note}</div>
-          <div class="entry-delta ${dClass}">${fmtSigned(d)}</div>
+          <div class="entry-hours">${hoursLabel}</div>
+          <div class="entry-note">${note}${kindBadge}${catPill}${tagBadges}</div>
+          <div class="entry-delta ${dClass}">${dStr}</div>
+          <button class="entry-edit" data-edit="${e.id}" aria-label="Edit entry" title="Edit">✎</button>
           <button class="entry-delete" data-id="${e.id}" aria-label="Delete entry">×</button>
         </div>`;
       }).join('');
       return `<div class="week-group">
         <div class="week-header">
-          <span><strong>${label}</strong> · ${total.toFixed(1)}h</span>
+          <span><strong>${label}</strong> · ${total.toFixed(1)}h${absLabel}</span>
           <span class="week-delta ${deltaClass}">${fmtSigned(delta)}</span>
         </div>
         ${rows}
@@ -1594,6 +2410,12 @@
         deleteEntry(id);
       });
     });
+    wrap.querySelectorAll('.entry-edit').forEach(b => {
+      b.addEventListener('click', () => {
+        const id = b.getAttribute('data-edit');
+        openEditModal(id);
+      });
+    });
   }
 
   // ---- Calendar ----
@@ -1602,6 +2424,7 @@
     return { year: d.getFullYear(), month: d.getMonth() };
   })();
   let dayFilter = null; // ISO date string or null
+  let categoryFilter = ''; // category id, '__none__' for uncategorized, or '' for all
 
   function entriesByDate() {
     const map = {};
@@ -1630,6 +2453,56 @@
     return 'way-over';
   }
 
+  function dayKindMap() {
+    // Returns: dateStr -> dominant kind (work / vacation / sick / holiday)
+    const map = {};
+    for (const e of entries) {
+      const k = entryKind(e);
+      if (!map[e.date]) map[e.date] = k;
+      else if (map[e.date] !== 'work' && k === 'work') map[e.date] = 'work'; // work wins
+    }
+    return map;
+  }
+
+  function monthSummary(year, month, today) {
+    let totalHours = 0;
+    let workedDays = 0;
+    let absenceDays = 0;
+    let expectedHours = 0;
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    const monthEnd = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+    const cutoff = today < monthEnd ? today : monthEnd;
+    const hoursMap = {};
+    const kindMap = {};
+    for (const e of entries) {
+      if (e.date.slice(0, 7) !== `${year}-${String(month + 1).padStart(2, '0')}`) continue;
+      const k = entryKind(e);
+      if (isCountedKind(k)) hoursMap[e.date] = (hoursMap[e.date] || 0) + e.hours;
+      if (!kindMap[e.date] || kindMap[e.date] !== 'work') kindMap[e.date] = k;
+      if (k === 'work' && hoursMap[e.date] !== undefined && kindMap[e.date] !== 'work') kindMap[e.date] = 'work';
+    }
+    for (let day = 1; day <= lastDay; day++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      if (dateStr > cutoff) break;
+      const dow = (new Date(year, month, day).getDay() + 6) % 7;
+      const isWeekend = dow >= 5;
+      const kind = kindMap[dateStr];
+      const hours = hoursMap[dateStr] || 0;
+      if (kind === 'work') {
+        totalHours += hours;
+        workedDays += 1;
+        if (!isWeekend) expectedHours += settings.dailyTarget;
+      } else if (kind && isAbsenceKind(kind)) {
+        absenceDays += 1;
+        // absence excuses the day — no expectation
+      } else if (!isWeekend) {
+        // missing weekday counts toward expectation
+        expectedHours += settings.dailyTarget;
+      }
+    }
+    return { totalHours, workedDays, absenceDays, expectedHours };
+  }
+
   function renderCalendar() {
     const { year, month } = calCursor;
     const monthDate = new Date(year, month, 1);
@@ -1639,42 +2512,33 @@
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    // Monday-first: shift Sunday(0) to 6, others -1
     const firstDow = (firstDay.getDay() + 6) % 7;
 
     const today = todayISO();
     const hoursMap = dayHoursMap();
+    const kindMap = dayKindMap();
 
     const dows = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     let html = dows.map(d => `<div class="cal-dow">${d}</div>`).join('');
 
-    // Leading empty cells
     for (let i = 0; i < firstDow; i++) {
       html += '<div class="cal-cell empty"></div>';
     }
 
-    let monthTotal = 0;
-    let workedDays = 0;
-    let monthExpected = 0;
-
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-      const hours = hoursMap[dateStr] || 0;
-      const dow = (new Date(year, month, day).getDay() + 6) % 7; // 0=Mon, 6=Sun
+      // Hours map includes absences as 0; sum work-only hours for cell
+      const workHoursSum = entries
+        .filter(e => e.date === dateStr && isCountedKind(entryKind(e)))
+        .reduce((s, e) => s + e.hours, 0);
+      const dominantKind = kindMap[dateStr];
+      const dow = (new Date(year, month, day).getDay() + 6) % 7;
       const isWeekend = dow >= 5;
       const isFuture = dateStr > today;
       const isToday = dateStr === today;
       const isSelected = dateStr === dayFilter;
-      const klass = classifyDay(hours);
-
-      if (hours > 0) {
-        monthTotal += hours;
-        workedDays += 1;
-        if (!isWeekend) monthExpected += settings.dailyTarget;
-      } else if (!isWeekend && !isFuture) {
-        // Weekday with no entry — count as missed expected hours up to today only
-        if (dateStr <= today) monthExpected += settings.dailyTarget;
-      }
+      const isAbsence = dominantKind && isAbsenceKind(dominantKind);
+      const klass = isAbsence ? '' : classifyDay(workHoursSum);
 
       const classes = [
         'cal-cell',
@@ -1682,31 +2546,33 @@
         isFuture ? 'future' : '',
         isToday ? 'today' : '',
         isSelected ? 'selected' : '',
-        klass,
-        hours > 0 ? 'has-time' : ''
+        isAbsence ? 'absence absence-' + dominantKind : klass,
+        workHoursSum > 0 ? 'has-time' : ''
       ].filter(Boolean).join(' ');
 
-      const hoursLabel = hours > 0 ? `<div class="cal-day-hours">${hours.toFixed(hours % 1 === 0 ? 0 : 1)}h</div>` : '';
+      let label;
+      if (isAbsence) {
+        label = `<div class="cal-day-hours" style="font-size: 11px; opacity: 0.85;">${ENTRY_KINDS[dominantKind].short}</div>`;
+      } else if (workHoursSum > 0) {
+        label = `<div class="cal-day-hours">${workHoursSum.toFixed(workHoursSum % 1 === 0 ? 0 : 1)}h</div>`;
+      } else {
+        label = '';
+      }
       const numClass = isWeekend ? 'cal-day-num weekend-num' : 'cal-day-num';
 
       html += `<div class="${classes}" data-date="${dateStr}" ${isFuture ? '' : 'role="button" tabindex="0"'}>
         <div class="${numClass}">${day}</div>
-        ${hoursLabel}
+        ${label}
       </div>`;
     }
 
     $('cal-grid').innerHTML = html;
 
-    // Wire up clicks
     document.querySelectorAll('.cal-cell[data-date]').forEach(cell => {
       const date = cell.getAttribute('data-date');
       if (date > today) return;
       const handler = () => {
-        if (dayFilter === date) {
-          dayFilter = null;
-        } else {
-          dayFilter = date;
-        }
+        dayFilter = (dayFilter === date) ? null : date;
         renderAll();
       };
       cell.addEventListener('click', handler);
@@ -1718,17 +2584,48 @@
       });
     });
 
-    // Summary
+    // Summary for current cursor month
+    const summary = monthSummary(year, month, today);
     const isCurrentMonth = monthKey(today) === `${year}-${String(month + 1).padStart(2, '0')}`;
-    const monthDelta = monthTotal - monthExpected;
+    const monthDelta = summary.totalHours - summary.expectedHours;
     const deltaClass = monthDelta > 0.01 ? 'pos' : (monthDelta < -0.01 ? 'neg' : '');
     const deltaSign = monthDelta >= 0 ? '+' : '';
+    const absText = summary.absenceDays > 0 ? `<span><strong>${summary.absenceDays}</strong> absence${summary.absenceDays === 1 ? '' : 's'}</span>` : '';
     $('cal-summary').innerHTML = `
-      <span><strong>${workedDays}</strong> day${workedDays === 1 ? '' : 's'} worked</span>
-      <span><strong>${monthTotal.toFixed(1)}h</strong> logged</span>
+      <span><strong>${summary.workedDays}</strong> day${summary.workedDays === 1 ? '' : 's'} worked</span>
+      <span><strong>${summary.totalHours.toFixed(1)}h</strong> logged</span>
+      ${absText}
       <span style="color: ${deltaClass === 'pos' ? 'var(--pos)' : deltaClass === 'neg' ? 'var(--neg)' : 'var(--ink-soft)'};">
         <strong>${deltaSign}${fmtHM(monthDelta)}</strong> vs ${isCurrentMonth ? 'expected so far' : 'expected'}
       </span>
+    `;
+
+    // Previous month comparison
+    let prevYear = year, prevMonth = month - 1;
+    if (prevMonth < 0) { prevMonth = 11; prevYear -= 1; }
+    const prev = monthSummary(prevYear, prevMonth, today);
+    const prevName = new Date(prevYear, prevMonth, 1).toLocaleDateString('en-GB', { month: 'long' });
+    const prevDelta = prev.totalHours - prev.expectedHours;
+    const prevDeltaClass = prevDelta > 0.01 ? 'pos' : (prevDelta < -0.01 ? 'neg' : '');
+    const prevDeltaColor = prevDeltaClass === 'pos' ? 'var(--pos)' : prevDeltaClass === 'neg' ? 'var(--neg)' : 'var(--ink-soft)';
+    const curDeltaColor = deltaClass === 'pos' ? 'var(--pos)' : deltaClass === 'neg' ? 'var(--neg)' : 'var(--ink-soft)';
+    $('cal-prev-compare').innerHTML = `
+      <div class="cal-prev-block">
+        <div class="cal-prev-label">${prevName} ${prevYear}</div>
+        <div class="cal-prev-stats">
+          <span><strong>${prev.workedDays}</strong>d</span>
+          <span><strong>${prev.totalHours.toFixed(1)}h</strong></span>
+          <span style="color: ${prevDeltaColor};"><strong>${prevDelta >= 0 ? '+' : ''}${fmtHM(prevDelta)}</strong></span>
+        </div>
+      </div>
+      <div class="cal-prev-block">
+        <div class="cal-prev-label">${monthName} ${year} ${isCurrentMonth ? '(so far)' : ''}</div>
+        <div class="cal-prev-stats">
+          <span><strong>${summary.workedDays}</strong>d</span>
+          <span><strong>${summary.totalHours.toFixed(1)}h</strong></span>
+          <span style="color: ${curDeltaColor};"><strong>${monthDelta >= 0 ? '+' : ''}${fmtHM(monthDelta)}</strong></span>
+        </div>
+      </div>
     `;
   }
 
@@ -1737,11 +2634,320 @@
     renderAll();
   }
 
+  // ---- Category UI ----
+  function populateCategorySelect(selectEl, currentValue) {
+    const cats = settings.categories || [];
+    const opts = ['<option value="">— None —</option>'];
+    for (const c of cats) {
+      const sel = c.id === currentValue ? 'selected' : '';
+      opts.push(`<option value="${escapeHTML(c.id)}" ${sel}>${escapeHTML(c.name)}</option>`);
+    }
+    selectEl.innerHTML = opts.join('');
+    if (currentValue) selectEl.value = currentValue;
+  }
+
+  function populateAllCategoryDropdowns() {
+    const inputs = [
+      { el: $('m-category'), val: $('m-category').value },
+      { el: $('timer-category'), val: $('timer-category').value },
+      { el: $('edit-category'), val: $('edit-category').value }
+    ];
+    for (const { el, val } of inputs) {
+      if (el) populateCategorySelect(el, val);
+    }
+    // Filter dropdown gets a special "uncategorized" option
+    const filterEl = $('entries-filter-cat');
+    if (filterEl) {
+      const cats = settings.categories || [];
+      const cur = filterEl.value;
+      const opts = [
+        '<option value="">All categories</option>',
+        '<option value="__none__">— Uncategorized —</option>'
+      ];
+      for (const c of cats) {
+        opts.push(`<option value="${escapeHTML(c.id)}">${escapeHTML(c.name)}</option>`);
+      }
+      filterEl.innerHTML = opts.join('');
+      filterEl.value = cur;
+    }
+  }
+
+  function populateTagsDatalist(datalistEl) {
+    if (!datalistEl) return;
+    const tags = allKnownTags();
+    datalistEl.innerHTML = tags.map(t => `<option value="${escapeHTML(t)}">`).join('');
+  }
+
+  function populateAllTagDatalists() {
+    populateTagsDatalist($('m-tags-list'));
+    populateTagsDatalist($('edit-tags-list'));
+  }
+
+  function renderCategoryManager() {
+    const wrap = $('cat-list');
+    if (!wrap) return;
+    const cats = settings.categories || [];
+    if (cats.length === 0) {
+      wrap.innerHTML = '<div class="cat-empty">No categories yet. Add one below.</div>';
+      return;
+    }
+    // Count entries per category
+    const counts = {};
+    for (const e of entries) {
+      if (e.categoryId) counts[e.categoryId] = (counts[e.categoryId] || 0) + 1;
+    }
+    wrap.innerHTML = cats.map(c => {
+      const n = counts[c.id] || 0;
+      return `<div class="cat-item" data-cat-id="${escapeHTML(c.id)}">
+        <input type="color" class="cat-item-swatch" value="${escapeHTML(c.color)}" data-field="color" title="Edit color">
+        <input type="text" class="cat-item-name" value="${escapeHTML(c.name)}" data-field="name" maxlength="40">
+        <span class="cat-item-count">${n} entr${n === 1 ? 'y' : 'ies'}</span>
+        <button class="cat-item-delete" data-cat-del="${escapeHTML(c.id)}" aria-label="Delete category">×</button>
+      </div>`;
+    }).join('');
+    // Wire up edits
+    wrap.querySelectorAll('.cat-item').forEach(item => {
+      const id = item.getAttribute('data-cat-id');
+      item.querySelector('input[data-field="name"]').addEventListener('change', (ev) => {
+        const v = ev.target.value.trim();
+        if (!v) { ev.target.value = (settings.categories.find(c => c.id === id) || {}).name || ''; return; }
+        const c = settings.categories.find(c => c.id === id);
+        if (c) { c.name = v; saveSettings(); populateAllCategoryDropdowns(); renderAll(); }
+      });
+      item.querySelector('input[data-field="color"]').addEventListener('change', (ev) => {
+        const c = settings.categories.find(c => c.id === id);
+        if (c) { c.color = ev.target.value; saveSettings(); renderAll(); }
+      });
+      item.querySelector('button[data-cat-del]').addEventListener('click', () => deleteCategory(id));
+    });
+  }
+
+  function addCategory() {
+    const nameEl = $('cat-new-name');
+    const colorEl = $('cat-new-color');
+    const name = nameEl.value.trim();
+    if (!name) { toast('Enter a category name'); return; }
+    if ((settings.categories || []).some(c => c.name.toLowerCase() === name.toLowerCase())) {
+      toast('A category with that name already exists');
+      return;
+    }
+    if (!settings.categories) settings.categories = [];
+    const cat = { id: newCategoryId(), name, color: colorEl.value || nextCategoryColor() };
+    settings.categories.push(cat);
+    saveSettings();
+    nameEl.value = '';
+    colorEl.value = nextCategoryColor();
+    populateAllCategoryDropdowns();
+    renderCategoryManager();
+    renderAll();
+    toast(`Added category "${name}"`);
+  }
+
+  function deleteCategory(id) {
+    const c = (settings.categories || []).find(c => c.id === id);
+    if (!c) return;
+    const inUse = entries.filter(e => e.categoryId === id).length;
+    const msg = inUse > 0
+      ? `Delete "${c.name}"?\n\n${inUse} entr${inUse === 1 ? 'y' : 'ies'} will keep their data but lose the category label.`
+      : `Delete "${c.name}"?`;
+    if (!confirm(msg)) return;
+    settings.categories = settings.categories.filter(x => x.id !== id);
+    // Unset categoryId on affected entries
+    for (const e of entries) {
+      if (e.categoryId === id) e.categoryId = null;
+    }
+    saveSettings();
+    saveEntries();
+    if (categoryFilter === id) categoryFilter = '';
+    populateAllCategoryDropdowns();
+    renderCategoryManager();
+    renderAll();
+    toast('Category deleted');
+  }
+
+  // ---- Category breakdown chart ----
+  function renderCategoryBreakdown() {
+    const wrap = $('cat-breakdown');
+    if (!wrap) return;
+    const period = $('cat-chart-period').value;
+    const today = todayISO();
+    let startDate;
+    if (period === 'month') {
+      startDate = today.slice(0, 7) + '-01';
+    } else if (period === '30d') {
+      const d = new Date(); d.setDate(d.getDate() - 29);
+      startDate = d.toISOString().slice(0, 10);
+    } else if (period === '90d') {
+      const d = new Date(); d.setDate(d.getDate() - 89);
+      startDate = d.toISOString().slice(0, 10);
+    } else if (period === 'ytd') {
+      startDate = today.slice(0, 4) + '-01-01';
+    } else {
+      startDate = '0000-01-01';
+    }
+    // Sum hours per category
+    const sums = {};
+    let total = 0;
+    for (const e of entries) {
+      if (!isCountedKind(entryKind(e))) continue;
+      if (e.date < startDate || e.date > today) continue;
+      const k = e.categoryId || '__none__';
+      sums[k] = (sums[k] || 0) + e.hours;
+      total += e.hours;
+    }
+    if (total === 0) {
+      wrap.innerHTML = '<div class="cat-breakdown-empty">No work hours in this period.</div>';
+      return;
+    }
+    // Build rows sorted by hours desc
+    const cats = settings.categories || [];
+    const rows = [];
+    for (const c of cats) {
+      const h = sums[c.id] || 0;
+      if (h > 0) rows.push({ name: c.name, color: c.color, hours: h });
+    }
+    if (sums['__none__'] && sums['__none__'] > 0) {
+      rows.push({ name: 'Uncategorized', color: 'var(--ink-faint)', hours: sums['__none__'] });
+    }
+    rows.sort((a, b) => b.hours - a.hours);
+    const max = rows[0].hours;
+    wrap.innerHTML = rows.map(r => {
+      const pct = (r.hours / total) * 100;
+      const widthPct = (r.hours / max) * 100;
+      return `<div class="cat-row">
+        <span class="cat-row-swatch" style="background: ${escapeHTML(r.color)};"></span>
+        <div class="cat-row-content">
+          <div class="cat-row-header">
+            <span class="cat-row-name">${escapeHTML(r.name)}</span>
+            <span class="cat-row-stats">${r.hours.toFixed(1)}h · ${pct.toFixed(0)}%</span>
+          </div>
+          <div class="cat-row-bar-track">
+            <div class="cat-row-bar-fill" style="width: ${widthPct}%; background: ${escapeHTML(r.color)};"></div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
   function renderAll() {
     renderStats();
     renderEntries();
     renderCalendar();
+    renderChart();
+    renderCategoryBreakdown();
     renderFilterBanner();
+  }
+
+  function renderChart() {
+    const svg = $('weekly-chart');
+    if (!svg) return;
+    const W = 700, H = 240;
+    const padL = 30, padR = 12, padT = 16, padB = 40;
+    const innerW = W - padL - padR;
+    const innerH = H - padT - padB;
+
+    // Get last 12 ISO weeks ending with current week
+    const today = todayISO();
+    const weeks = [];
+    const cursor = new Date(today + 'T00:00:00');
+    // Move back to Monday of current week
+    const dayNr = (cursor.getDay() + 6) % 7;
+    cursor.setDate(cursor.getDate() - dayNr);
+    for (let i = 0; i < 12; i++) {
+      const d = new Date(cursor);
+      d.setDate(d.getDate() - i * 7);
+      const iso = d.toISOString().slice(0, 10);
+      weeks.unshift({ weekKey: isoWeekKey(iso), monday: iso });
+    }
+
+    // Compute hours per week (work only)
+    const workByWeek = {};
+    const absByWeek = {};
+    for (const e of workEntries()) {
+      const wk = isoWeekKey(e.date);
+      workByWeek[wk] = (workByWeek[wk] || 0) + e.hours;
+    }
+    for (const e of absenceEntries()) {
+      const wk = isoWeekKey(e.date);
+      const days = absByWeek[wk] || new Set();
+      days.add(e.date);
+      absByWeek[wk] = days;
+    }
+
+    // Find max for scale
+    let maxH = settings.weeklyTarget;
+    for (const w of weeks) {
+      const h = workByWeek[w.weekKey] || 0;
+      if (h > maxH) maxH = h;
+    }
+    maxH = Math.ceil(maxH / 5) * 5; // nearest 5h
+
+    const barWidth = innerW / weeks.length * 0.7;
+    const barGap = innerW / weeks.length;
+    const targetY = padT + innerH - (settings.weeklyTarget / maxH) * innerH;
+
+    let svgHTML = '';
+    // Y-axis labels (0, half, max)
+    const yLabels = [0, maxH / 2, maxH];
+    for (const v of yLabels) {
+      const y = padT + innerH - (v / maxH) * innerH;
+      svgHTML += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="var(--line-soft)" stroke-width="0.5"/>`;
+      svgHTML += `<text x="${padL - 6}" y="${y + 3}" text-anchor="end" class="chart-axis-text">${v}h</text>`;
+    }
+
+    // Target line
+    svgHTML += `<line x1="${padL}" y1="${targetY}" x2="${W - padR}" y2="${targetY}" class="chart-target-line"/>`;
+
+    // Bars
+    weeks.forEach((w, i) => {
+      const hours = workByWeek[w.weekKey] || 0;
+      const absences = absByWeek[w.weekKey] ? absByWeek[w.weekKey].size : 0;
+      const expected = Math.max(0, settings.weeklyTarget - Math.min(absences, 5) * settings.dailyTarget);
+      const x = padL + i * barGap + (barGap - barWidth) / 2;
+      const h = (hours / maxH) * innerH;
+      const y = padT + innerH - h;
+      const overTarget = hours > expected + 0.01;
+      const underTarget = hours < expected - 0.01 && expected > 0;
+      const fill = overTarget ? 'var(--pos)' : (underTarget ? 'var(--neg)' : 'var(--ink-soft)');
+      const opacity = (i === weeks.length - 1) ? '0.9' : '0.7'; // current week brighter
+
+      svgHTML += `<rect class="chart-bar" x="${x}" y="${y}" width="${barWidth}" height="${h}" fill="${fill}" opacity="${opacity}" rx="2">
+        <title>${w.weekKey}: ${hours.toFixed(1)}h${absences > 0 ? ` (${absences} absence${absences === 1 ? '' : 's'})` : ''} · expected ${expected.toFixed(1)}h</title>
+      </rect>`;
+
+      // Hours label above bar (only if visible)
+      if (hours > 0) {
+        svgHTML += `<text x="${x + barWidth/2}" y="${y - 4}" text-anchor="middle" class="chart-bar-text">${hours.toFixed(0)}</text>`;
+      }
+
+      // Week label below
+      const weekNum = w.weekKey.slice(-2);
+      svgHTML += `<text x="${x + barWidth/2}" y="${H - padB + 14}" text-anchor="middle" class="chart-axis-text">W${weekNum}</text>`;
+    });
+
+    // Baseline
+    svgHTML += `<line x1="${padL}" y1="${padT + innerH}" x2="${W - padR}" y2="${padT + innerH}" class="chart-baseline"/>`;
+
+    svg.innerHTML = svgHTML;
+
+    // 12-week average (excluding current incomplete week)
+    const completedWeeks = weeks.slice(0, -1);
+    if (completedWeeks.length > 0) {
+      let sum = 0, count = 0;
+      for (const w of completedWeeks) {
+        const h = workByWeek[w.weekKey];
+        if (h !== undefined) {
+          sum += h;
+          count += 1;
+        }
+      }
+      if (count > 0) {
+        const avg = sum / count;
+        $('chart-avg').innerHTML = `${count}-week avg: <strong>${avg.toFixed(1)}h</strong>`;
+      } else {
+        $('chart-avg').textContent = '';
+      }
+    }
   }
 
   function renderFilterBanner() {
@@ -1790,7 +2996,11 @@
   }
 
   function startTimer() {
-    timer = { startedAt: Date.now(), note: $('timer-note').value.trim() };
+    timer = {
+      startedAt: Date.now(),
+      note: $('timer-note').value.trim(),
+      categoryId: $('timer-category').value || null
+    };
     saveTimer();
     renderTimer();
     startTick();
@@ -1815,7 +3025,10 @@
       hours: Math.round(elapsedHours * 100) / 100,
       note,
       created: Date.now(),
-      source: 'timer'
+      source: 'timer',
+      kind: 'work',
+      categoryId: timer.categoryId || null,
+      tags: []
     };
     entries.push(entry);
     saveEntries();
@@ -1829,6 +3042,51 @@
   }
 
   let manualMode = 'hours'; // 'hours' or 'range'
+
+  const ENTRY_KINDS = {
+    work: { label: 'Work', short: 'W', color: 'var(--ink)' },
+    vacation: { label: 'Vacation', short: 'V', color: '#5b8def' },
+    sick: { label: 'Sick', short: 'S', color: '#a8341c' },
+    holiday: { label: 'Holiday', short: 'H', color: '#9b6ddb' }
+  };
+
+  function entryKind(e) { return e.kind || 'work'; }
+  function isCountedKind(kind) { return kind === 'work'; } // only work entries count toward flex
+  function isAbsenceKind(kind) { return kind === 'vacation' || kind === 'sick' || kind === 'holiday'; }
+
+  // ---- Category & tag helpers ----
+  function getCategoryById(id) {
+    if (!id) return null;
+    return (settings.categories || []).find(c => c.id === id) || null;
+  }
+  function entryCategory(e) {
+    if (!e.categoryId) return null;
+    return getCategoryById(e.categoryId);
+  }
+  function entryTags(e) {
+    return Array.isArray(e.tags) ? e.tags : [];
+  }
+  function newCategoryId() {
+    return 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+  }
+  function nextCategoryColor() {
+    const used = (settings.categories || []).map(c => c.color);
+    for (const c of CATEGORY_COLORS) {
+      if (!used.includes(c)) return c;
+    }
+    return CATEGORY_COLORS[Math.floor(Math.random() * CATEGORY_COLORS.length)];
+  }
+  function allKnownTags() {
+    const set = new Set();
+    for (const e of entries) {
+      for (const t of entryTags(e)) set.add(t);
+    }
+    return [...set].sort((a, b) => a.localeCompare(b));
+  }
+  function parseTagsInput(str) {
+    if (!str) return [];
+    return str.split(',').map(t => t.trim()).filter(t => t.length > 0).slice(0, 10);
+  }
 
   function lunchHoursDeduction() {
     if (!$('m-lunch').checked) return 0;
@@ -1909,12 +3167,16 @@
       note: fullNote,
       created: Date.now(),
       source: 'manual',
-      lunch: lunch > 0 ? settings.lunchMinutes : 0
+      kind: 'work',
+      lunch: lunch > 0 ? settings.lunchMinutes : 0,
+      categoryId: $('m-category').value || null,
+      tags: parseTagsInput($('m-tags').value)
     };
     entries.push(entry);
     saveEntries();
     $('m-hours').value = '';
     $('m-note').value = '';
+    $('m-tags').value = '';
     updatePreview();
     renderAll();
     toast(`Added ${entry.hours}h on ${prettyDate(date)}`);
@@ -1942,22 +3204,286 @@
       note: fullNote,
       created: Date.now(),
       source: 'range',
+      kind: 'work',
       start,
       stop,
-      lunch: lunch > 0 ? settings.lunchMinutes : 0
+      lunch: lunch > 0 ? settings.lunchMinutes : 0,
+      categoryId: $('m-category').value || null,
+      tags: parseTagsInput($('m-tags').value)
     };
     entries.push(entry);
     saveEntries();
     $('m-r-note').value = '';
+    $('m-tags').value = '';
     updatePreview();
     renderAll();
     toast(`Added ${entry.hours}h on ${prettyDate(date)}`);
   }
 
+  // ---- Quick actions ----
+  function newId(prefix) {
+    return prefix + Date.now() + Math.random().toString(36).slice(2, 6);
+  }
+
+  function addDefaultDay(date) {
+    date = date || todayISO();
+    // Skip weekends
+    const dow = (new Date(date + 'T00:00:00').getDay() + 6) % 7;
+    if (dow >= 5) {
+      toast(`${prettyDate(date)} is a weekend — skipped`);
+      return null;
+    }
+    // Skip if there's already a work entry on that date
+    if (entries.some(e => e.date === date && isCountedKind(entryKind(e)))) {
+      toast(`${prettyDate(date)} already has an entry`);
+      return null;
+    }
+    const start = '08:00';
+    const stop = '16:00';
+    const gross = computeRangeHours(start, stop);
+    const lunchMin = settings.lunchMinutes || 0;
+    const finalHours = Math.max(0, gross - lunchMin / 60);
+    const lunchTag = lunchMin > 0 ? ` (−${lunchMin}min lunch)` : '';
+    const entry = {
+      id: newId('q'),
+      date,
+      hours: Math.round(finalHours * 100) / 100,
+      note: `${start}–${stop}${lunchTag}`,
+      created: Date.now(),
+      source: 'range',
+      kind: 'work',
+      start, stop,
+      lunch: lunchMin
+    };
+    entries.push(entry);
+    return entry;
+  }
+
+  function addQuickDefaultDay() {
+    const e = addDefaultDay(todayISO());
+    if (e) {
+      saveEntries();
+      renderAll();
+      toast(`Added default day · ${e.hours}h`);
+    }
+  }
+
+  function fillMissingWeekdays() {
+    // Find latest entry date; default to start of current month if none
+    const today = todayISO();
+    let latestDate = null;
+    for (const e of entries) {
+      if (e.date <= today && (!latestDate || e.date > latestDate)) latestDate = e.date;
+    }
+    let startDate;
+    if (latestDate) {
+      const d = new Date(latestDate + 'T00:00:00');
+      d.setDate(d.getDate() + 1);
+      startDate = d.toISOString().slice(0, 10);
+    } else {
+      // Last 14 days
+      const d = new Date();
+      d.setDate(d.getDate() - 14);
+      startDate = d.toISOString().slice(0, 10);
+    }
+    if (startDate > today) {
+      toast('No gaps to fill');
+      return;
+    }
+    // Collect missing weekdays between startDate and today (inclusive)
+    const missing = [];
+    const cursor = new Date(startDate + 'T00:00:00');
+    const endCursor = new Date(today + 'T00:00:00');
+    while (cursor <= endCursor) {
+      const iso = cursor.toISOString().slice(0, 10);
+      const dow = (cursor.getDay() + 6) % 7;
+      const hasEntry = entries.some(e => e.date === iso);
+      if (dow < 5 && !hasEntry) missing.push(iso);
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    if (missing.length === 0) {
+      toast('No missing weekdays');
+      return;
+    }
+    const list = missing.map(d => `  • ${prettyDate(d)} (${dayName(d)})`).join('\n');
+    const ok = confirm(
+      `Fill ${missing.length} weekday${missing.length === 1 ? '' : 's'} with a default 08:00–16:00 day?\n\n${list}\n\nClick OK to add all, Cancel to skip.`
+    );
+    if (!ok) return;
+    let added = 0;
+    for (const d of missing) {
+      const e = addDefaultDay(d);
+      if (e) added += 1;
+    }
+    if (added > 0) {
+      saveEntries();
+      renderAll();
+      toast(`Filled ${added} day${added === 1 ? '' : 's'}`);
+    }
+  }
+
+  function addQuickAbsence(kind) {
+    const date = todayISO();
+    const label = ENTRY_KINDS[kind].label;
+    if (entries.some(e => e.date === date && entryKind(e) === kind)) {
+      toast(`${label} already logged for today`);
+      return;
+    }
+    const entry = {
+      id: newId('a'),
+      date,
+      hours: 0,
+      note: label,
+      created: Date.now(),
+      source: 'manual',
+      kind
+    };
+    entries.push(entry);
+    saveEntries();
+    renderAll();
+    toast(`Added ${label.toLowerCase()} for ${prettyDate(date)}`);
+  }
+
+  // ---- Edit modal ----
+  let editingId = null;
+  let editMode = 'hours';
+
+  function openEditModal(id) {
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    editingId = id;
+    const kind = entryKind(e);
+    $('edit-modal').style.display = 'flex';
+    $('edit-date').value = e.date;
+    $('edit-kind').value = kind;
+    $('edit-note').value = e.note || '';
+    $('edit-hours').value = e.hours;
+    $('edit-lunch-mins').textContent = settings.lunchMinutes;
+    populateCategorySelect($('edit-category'), e.categoryId || '');
+    $('edit-tags').value = entryTags(e).join(', ');
+    populateTagsDatalist($('edit-tags-list'));
+    // Show/hide cat-tags row based on kind
+    $('edit-cat-tags-row').style.display = kind === 'work' ? 'grid' : 'none';
+    if (e.source === 'range' && e.start && e.stop) {
+      setEditMode('range');
+      $('edit-start').value = e.start;
+      $('edit-stop').value = e.stop;
+      $('edit-lunch').checked = (e.lunch || 0) > 0;
+    } else {
+      setEditMode('hours');
+      $('edit-start').value = '08:00';
+      $('edit-stop').value = '16:00';
+      $('edit-lunch').checked = false;
+    }
+    updateEditPreview();
+    setTimeout(() => $('edit-hours').focus(), 50);
+  }
+
+  function closeEditModal() {
+    $('edit-modal').style.display = 'none';
+    editingId = null;
+  }
+
+  function setEditMode(mode) {
+    editMode = mode;
+    document.querySelectorAll('[data-edit-mode]').forEach(b => {
+      const active = b.getAttribute('data-edit-mode') === mode;
+      b.classList.toggle('active', active);
+    });
+    $('edit-grid-hours').style.display = mode === 'hours' ? 'grid' : 'none';
+    $('edit-grid-range').style.display = mode === 'range' ? 'grid' : 'none';
+    updateEditPreview();
+  }
+
+  function updateEditPreview() {
+    const kind = $('edit-kind').value;
+    const previewEl = $('edit-preview');
+    // Toggle category/tags row depending on kind
+    $('edit-cat-tags-row').style.display = kind === 'work' ? 'grid' : 'none';
+    if (kind !== 'work') {
+      previewEl.innerHTML = `<strong>${ENTRY_KINDS[kind].label}</strong> day — does not count toward flex but excuses missed hours.`;
+      return;
+    }
+    if (editMode === 'range') {
+      const gross = computeRangeHours($('edit-start').value, $('edit-stop').value);
+      if (gross == null || gross <= 0) { previewEl.textContent = ''; return; }
+      const lunch = $('edit-lunch').checked ? (settings.lunchMinutes / 60) : 0;
+      const net = Math.max(0, gross - lunch);
+      previewEl.innerHTML = lunch > 0
+        ? `${gross.toFixed(2)}h − ${lunch.toFixed(2)}h lunch = <strong>${net.toFixed(2)}h</strong>`
+        : `<strong>${net.toFixed(2)}h</strong>`;
+    } else {
+      const h = parseFloat($('edit-hours').value);
+      previewEl.innerHTML = (h && h > 0) ? `<strong>${h.toFixed(2)}h</strong>` : '';
+    }
+  }
+
+  function saveEdit() {
+    if (!editingId) return;
+    const e = entries.find(x => x.id === editingId);
+    if (!e) { closeEditModal(); return; }
+    const date = $('edit-date').value;
+    const kind = $('edit-kind').value;
+    const note = $('edit-note').value.trim();
+    if (!date) { toast('Pick a date'); return; }
+
+    if (kind === 'work') {
+      let hours;
+      let start, stop, lunch = 0;
+      let source = e.source;
+      if (editMode === 'range') {
+        start = $('edit-start').value;
+        stop = $('edit-stop').value;
+        if (!start || !stop) { toast('Enter start and stop times'); return; }
+        const gross = computeRangeHours(start, stop);
+        if (gross == null || gross <= 0 || gross > 24) { toast('Invalid time range'); return; }
+        if ($('edit-lunch').checked) lunch = settings.lunchMinutes;
+        hours = Math.max(0, gross - lunch / 60);
+        source = 'range';
+      } else {
+        hours = parseFloat($('edit-hours').value);
+        if (!hours || hours <= 0 || hours > 24) { toast('Enter hours between 0 and 24'); return; }
+        source = 'manual';
+      }
+      Object.assign(e, {
+        date,
+        hours: Math.round(hours * 100) / 100,
+        note,
+        kind: 'work',
+        source,
+        start, stop,
+        lunch,
+        categoryId: $('edit-category').value || null,
+        tags: parseTagsInput($('edit-tags').value)
+      });
+    } else {
+      Object.assign(e, {
+        date,
+        hours: 0,
+        note: note || ENTRY_KINDS[kind].label,
+        kind,
+        source: 'manual',
+        start: undefined,
+        stop: undefined,
+        lunch: 0,
+        categoryId: null,
+        tags: []
+      });
+    }
+    saveEntries();
+    renderAll();
+    closeEditModal();
+    toast('Entry updated');
+  }
+
   function deleteEntry(id) {
     const e = entries.find(x => x.id === id);
     if (!e) return;
-    if (!confirm(`Delete ${e.hours}h on ${prettyDate(e.date)}?`)) return;
+    const kind = entryKind(e);
+    const desc = isCountedKind(kind)
+      ? `${e.hours}h on ${prettyDate(e.date)}`
+      : `${ENTRY_KINDS[kind].label} on ${prettyDate(e.date)}`;
+    if (!confirm(`Delete ${desc}?`)) return;
     entries = entries.filter(x => x.id !== id);
     saveEntries();
     renderAll();
@@ -1966,16 +3492,25 @@
 
   function exportCSV() {
     const DELIM = ';';
-    const rows = [['date','day','hours','note','source','iso_week']];
+    const rows = [['date','day','iso_week','kind','hours','start','stop','lunch_min','category','tags','note','source']];
     const sorted = [...entries].sort((a, b) => a.date < b.date ? -1 : 1);
     for (const e of sorted) {
+      const k = entryKind(e);
+      const cat = entryCategory(e);
+      const tags = entryTags(e).join(', ');
       rows.push([
         e.date,
         dayName(e.date),
-        e.hours.toFixed(2).replace('.', ','), // Danish decimal comma
+        isoWeekKey(e.date),
+        k,
+        e.hours.toFixed(2).replace('.', ','),
+        e.start || '',
+        e.stop || '',
+        e.lunch || 0,
+        '"' + (cat ? cat.name.replace(/"/g, '""') : '') + '"',
+        '"' + tags.replace(/"/g, '""') + '"',
         '"' + (e.note || '').replace(/"/g, '""') + '"',
-        e.source || '',
-        isoWeekKey(e.date)
+        e.source || ''
       ]);
     }
     const csv = '\uFEFF' + rows.map(r => r.join(DELIM)).join('\r\n');
@@ -2082,6 +3617,8 @@
   // ---- Init ----
   function init() {
     loadAll();
+    // Migration: ensure categories array exists (for old data)
+    if (!Array.isArray(settings.categories)) settings.categories = [];
     $('m-date').value = todayISO();
     $('m-r-date').value = todayISO();
     $('today-meta').textContent = new Date().toLocaleDateString('en-GB', {
@@ -2089,6 +3626,10 @@
     });
     loadSettingsIntoForm();
     bindSettings();
+    populateAllCategoryDropdowns();
+    populateAllTagDatalists();
+    renderCategoryManager();
+    $('cat-new-color').value = nextCategoryColor();
     renderAll();
     renderTimer();
     if (timer) startTick();
@@ -2165,6 +3706,67 @@
       renderCalendar();
     });
     $('filter-clear').addEventListener('click', clearFilter);
+
+    // Quick action buttons
+    $('qa-default-day').addEventListener('click', addQuickDefaultDay);
+    $('qa-fill-gaps').addEventListener('click', fillMissingWeekdays);
+    document.querySelectorAll('[data-quick-kind]').forEach(b => {
+      b.addEventListener('click', () => addQuickAbsence(b.getAttribute('data-quick-kind')));
+    });
+
+    // Edit modal wiring
+    $('edit-close').addEventListener('click', closeEditModal);
+    $('edit-cancel').addEventListener('click', closeEditModal);
+    $('edit-save').addEventListener('click', saveEdit);
+    $('edit-modal').addEventListener('click', (e) => {
+      if (e.target === $('edit-modal')) closeEditModal();
+    });
+    document.querySelectorAll('[data-edit-mode]').forEach(b => {
+      b.addEventListener('click', () => setEditMode(b.getAttribute('data-edit-mode')));
+    });
+    $('edit-kind').addEventListener('change', updateEditPreview);
+    $('edit-hours').addEventListener('input', updateEditPreview);
+    ['edit-start', 'edit-stop'].forEach(id => {
+      $(id).addEventListener('input', updateEditPreview);
+      $(id).addEventListener('change', updateEditPreview);
+    });
+    $('edit-lunch').addEventListener('change', updateEditPreview);
+
+    // Category manager
+    $('cat-add').addEventListener('click', addCategory);
+    $('cat-new-name').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); addCategory(); }
+    });
+
+    // Category filter on entries
+    $('entries-filter-cat').addEventListener('change', (e) => {
+      categoryFilter = e.target.value;
+      renderEntries();
+    });
+
+    // Breakdown chart period
+    $('cat-chart-period').addEventListener('change', renderCategoryBreakdown);
+
+    // Tag autocomplete refresh on focus
+    $('m-tags').addEventListener('focus', () => populateTagsDatalist($('m-tags-list')));
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Skip if user is typing in a field
+      const tag = (e.target.tagName || '').toLowerCase();
+      const editing = ['input', 'textarea', 'select'].includes(tag) || e.target.isContentEditable;
+      // Escape always closes the modal
+      if (e.key === 'Escape' && $('edit-modal').style.display !== 'none') {
+        closeEditModal();
+        return;
+      }
+      if (editing) return;
+      // Space toggles timer
+      if (e.code === 'Space' || e.key === ' ') {
+        e.preventDefault();
+        if (timer) stopTimer(); else startTimer();
+      }
+    });
 
     // Sync wiring
     $('btn-sync-save').addEventListener('click', connectSync);
