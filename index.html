@@ -297,6 +297,21 @@
   .cal-cell.absence-vacation { border-color: #b9c9f0; }
   .cal-cell.absence-sick { border-color: #e8b5a8; }
   .cal-cell.absence-holiday { border-color: #d3bdef; }
+  /* Public holiday — visual marking, distinct from absence entries */
+  .cal-cell.public-holiday {
+    background: repeating-linear-gradient(
+      135deg,
+      var(--bg-card),
+      var(--bg-card) 5px,
+      color-mix(in srgb, #9b6ddb 12%, var(--bg-card)) 5px,
+      color-mix(in srgb, #9b6ddb 12%, var(--bg-card)) 10px
+    );
+    border-color: color-mix(in srgb, #9b6ddb 35%, var(--line));
+  }
+  .cal-cell.public-holiday.has-time {
+    /* Holiday with work logged — blend purple stripe with the over-target color */
+    border-color: color-mix(in srgb, #9b6ddb 60%, var(--line));
+  }
   .cal-prev-compare {
     margin-top: 16px;
     padding-top: 16px;
@@ -330,6 +345,95 @@
   .cal-prev-stats strong {
     color: var(--ink);
     font-weight: 500;
+  }
+  /* Vacation account card */
+  .vacation-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .vac-year {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line-soft);
+    align-items: start;
+  }
+  .vac-year:last-child { border-bottom: none; padding-bottom: 0; }
+  .vac-year:first-child { padding-top: 0; }
+  .vac-year-header {
+    grid-column: 1 / 4;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 2px;
+  }
+  .vac-year-label {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .vac-year-dates {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .vac-current-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 2px 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 10px;
+  }
+  .vac-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .vac-stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .vac-stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: "opsz" 144;
+  }
+  .vac-stat-value.pos { color: var(--pos); }
+  .vac-stat-sub {
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+  .vac-disc-note {
+    grid-column: 1 / 4;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-style: italic;
+    margin-top: 4px;
+  }
+  @media (max-width: 640px) {
+    .vac-year { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .vac-year-header { grid-column: 1 / 3; flex-wrap: wrap; }
+    .vac-disc-note { grid-column: 1 / 3; }
+    .vac-stat-value { font-size: 19px; }
+    .vacation-card { padding: 16px 16px; }
   }
   /* Chart */
   .chart-card {
@@ -1024,6 +1128,16 @@
   .cal-swatch.exact { background: color-mix(in srgb, #4a9d6f 18%, var(--bg-card)); border-color: color-mix(in srgb, #4a9d6f 50%, var(--line)); }
   .cal-swatch.over { background: color-mix(in srgb, #4a90c4 22%, var(--bg-card)); border-color: color-mix(in srgb, #4a90c4 55%, var(--line)); }
   .cal-swatch.way-over { background: color-mix(in srgb, #1d5a8a 35%, var(--bg-card)); border-color: color-mix(in srgb, #1d5a8a 70%, var(--line)); }
+  .cal-swatch.public-holiday-swatch {
+    background: repeating-linear-gradient(
+      135deg,
+      var(--bg-card),
+      var(--bg-card) 3px,
+      color-mix(in srgb, #9b6ddb 35%, var(--bg-card)) 3px,
+      color-mix(in srgb, #9b6ddb 35%, var(--bg-card)) 6px
+    );
+    border-color: color-mix(in srgb, #9b6ddb 50%, var(--line));
+  }
   .cal-summary {
     display: flex;
     gap: 24px;
@@ -1104,6 +1218,88 @@
     margin-top: 24px;
     padding-top: 20px;
     border-top: 1px solid var(--line);
+  }
+  .notif-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .notif-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .notif-title {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .notif-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .notif-badge.on {
+    background: var(--pos-soft);
+    border-color: color-mix(in srgb, var(--pos) 40%, var(--line));
+    color: var(--pos);
+  }
+  .notif-help {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  /* Vacation & holidays settings */
+  .vac-settings-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .vac-settings-header {
+    margin-bottom: 10px;
+  }
+  .vac-settings-title {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .vac-settings-help {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .holiday-toggles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 16px;
+  }
+  @media (max-width: 640px) {
+    .holiday-toggles { grid-template-columns: 1fr; }
+  }
+  .holiday-toggle-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink);
+    padding: 4px 0;
+  }
+  .holiday-toggle-item .holiday-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
   }
   .sync-header {
     display: flex;
@@ -1856,10 +2052,16 @@
         <div class="cal-legend-item"><span class="cal-swatch exact"></span>On target</div>
         <div class="cal-legend-item"><span class="cal-swatch over"></span>Over (≤+2h)</div>
         <div class="cal-legend-item"><span class="cal-swatch way-over"></span>Heavy (&gt;+2h)</div>
+        <div class="cal-legend-item"><span class="cal-swatch public-holiday-swatch"></span>Public holiday</div>
       </div>
       <div class="cal-summary" id="cal-summary"></div>
       <div class="cal-prev-compare" id="cal-prev-compare"></div>
     </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Vacation account</div>
+    <div id="vacation-card" class="vacation-card"></div>
   </section>
 
   <section class="section">
@@ -1923,6 +2125,53 @@
         </div>
         <div style="margin-top: 14px; font-size: 12px; color: var(--ink-faint); line-height: 1.6;">
           Data stays in this browser only. Export a JSON backup occasionally if you depend on it. Import to move between browsers or devices.
+        </div>
+
+        <div class="notif-section">
+          <div class="notif-header">
+            <span class="notif-title">Notifications</span>
+            <span class="notif-badge" id="notif-badge">Off</span>
+          </div>
+          <div class="notif-help">
+            Reminds you when a timer is running and warns if it's been running for too long. Only works on the installed PWA (HTTPS) — not on file:// or older browsers.
+          </div>
+          <label class="checkbox-label" style="margin-bottom: 12px;">
+            <input type="checkbox" id="notif-toggle">
+            <span class="checkbox-box" aria-hidden="true"></span>
+            <span class="checkbox-text">Enable notifications</span>
+          </label>
+          <label style="font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 8px;">
+            Warn after timer runs
+            <input type="number" id="set-warn-hours" step="1" min="1" max="24" style="width: 60px;">
+            <span style="font-size: 11px; color: var(--ink-faint);">hours</span>
+          </label>
+        </div>
+
+        <div class="vac-settings-section">
+          <div class="vac-settings-header">
+            <span class="vac-settings-title">Vacation &amp; holidays</span>
+          </div>
+          <div class="vac-settings-help">
+            Danish vacation runs Sept 1 – Aug 31 (with use-by Dec 31 the following year). Days accrue 2.08/month. Tick which public holidays your employer observes.
+          </div>
+          <div class="settings-row" style="margin-bottom: 14px;">
+            <label>Employment start
+              <input type="date" id="set-emp-start">
+            </label>
+            <label>Vacation days/year
+              <input type="number" id="set-vac-days" step="1" min="0" max="50">
+            </label>
+            <label>Discretionary/year
+              <input type="number" id="set-disc-days" step="1" min="0" max="20">
+            </label>
+          </div>
+          <label class="checkbox-label" style="margin-bottom: 14px;">
+            <input type="checkbox" id="set-auto-holidays">
+            <span class="checkbox-box" aria-hidden="true"></span>
+            <span class="checkbox-text">Auto-create holiday entries for observed public holidays</span>
+          </label>
+          <div class="vac-settings-help" style="margin-top: 8px; margin-bottom: 8px;">Observed public holidays:</div>
+          <div id="holiday-toggles" class="holiday-toggles"></div>
         </div>
 
         <div class="cat-manage-section">
@@ -2089,7 +2338,29 @@
     weeklyTarget: 37.5,
     monthlyTarget: 160.33,
     lunchMinutes: 30,
-    categories: [] // [{ id, name, color }]
+    categories: [],
+    notificationsEnabled: false,
+    longTimerWarnHours: 8,
+    // Vacation / holiday config
+    employmentStartDate: '2024-08-01',   // when vacation accrual starts
+    vacationDaysPerYear: 25,              // statutory Danish minimum
+    discretionaryDaysPerYear: 5,          // per contract ("feriefridage")
+    // Which Danish public holidays are paid days off at this employer.
+    // Keys match the holidayCalendar() output below.
+    holidayObservances: {
+      newYears: true,
+      maundyThursday: true,
+      goodFriday: true,
+      easterMonday: true,
+      ascensionDay: true,
+      whitMonday: true,
+      constitutionDay: false,  // not statutory; varies by employer
+      christmasEve: true,      // per contract section "OTHER TIME OFF"
+      christmasDay: true,
+      secondChristmas: true,
+      newYearsEve: true        // per contract section "OTHER TIME OFF"
+    },
+    autoCreateHolidayEntries: false      // off by default; user can toggle
   };
 
   // Soft, distinguishable color palette for categories
@@ -2469,50 +2740,91 @@
   function workEntries() { return entries.filter(e => isCountedKind(entryKind(e))); }
   function absenceEntries() { return entries.filter(e => isAbsenceKind(entryKind(e))); }
 
+  // Returns true if the date is excused: an absence entry OR an observed public holiday.
+  // (Public holidays don't need an entry to be excused.)
+  function isDateExcused(dateStr) {
+    if (isPublicHoliday(dateStr)) return true;
+    return entries.some(e => e.date === dateStr && isAbsenceKind(entryKind(e)));
+  }
+
   function workedDaysInWeek(weekKey) {
+    // Days with work entries, EXCLUDING public holidays (those are handled separately)
     const days = new Set(
-      workEntries().filter(e => isoWeekKey(e.date) === weekKey).map(e => e.date)
+      workEntries()
+        .filter(e => isoWeekKey(e.date) === weekKey && !isPublicHoliday(e.date))
+        .map(e => e.date)
     );
     return days.size;
   }
 
-  // Days in a week that are absences (vacation/sick/holiday) — these excuse the missed hours
   function absenceDaysInWeek(weekKey) {
-    const days = new Set(
-      absenceEntries().filter(e => isoWeekKey(e.date) === weekKey).map(e => e.date)
-    );
+    // Counts both explicit absence entries AND public holidays, deduplicated by date
+    const days = new Set();
+    for (const e of absenceEntries()) {
+      if (isoWeekKey(e.date) === weekKey) days.add(e.date);
+    }
+    // Add public holidays that fall in this week (up to 7 dates to check)
+    // We iterate by finding the week's Monday and walking 7 days
+    const sample = entries.find(e => isoWeekKey(e.date) === weekKey);
+    if (sample) {
+      const monday = mondayOfWeek(sample.date);
+      for (let i = 0; i < 7; i++) {
+        const d = isoDate(addDays(new Date(monday + 'T00:00:00Z'), i));
+        if (isPublicHoliday(d)) days.add(d);
+      }
+    }
     return days.size;
+  }
+
+  function mondayOfWeek(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00Z');
+    const dow = (d.getUTCDay() + 6) % 7; // 0 = Mon
+    d.setUTCDate(d.getUTCDate() - dow);
+    return d.toISOString().slice(0, 10);
+  }
+
+  // Hours worked on public holidays in a given week — these are pure flex bonus.
+  function holidayWorkHoursInWeek(weekKey) {
+    return workEntries()
+      .filter(e => isoWeekKey(e.date) === weekKey && isPublicHoliday(e.date))
+      .reduce((s, e) => s + e.hours, 0);
+  }
+
+  // Hours worked on non-holiday dates in a given week.
+  function regularWorkHoursInWeek(weekKey) {
+    return workEntries()
+      .filter(e => isoWeekKey(e.date) === weekKey && !isPublicHoliday(e.date))
+      .reduce((s, e) => s + e.hours, 0);
   }
 
   function flexBalance() {
-    const byWeek = {};
-    for (const e of workEntries()) {
-      const wk = isoWeekKey(e.date);
-      byWeek[wk] = (byWeek[wk] || 0) + e.hours;
-    }
-    // Include weeks that have only absence entries so they're excused
-    for (const e of absenceEntries()) {
-      const wk = isoWeekKey(e.date);
-      if (!(wk in byWeek)) byWeek[wk] = 0;
-    }
+    // Collect all weeks that have any kind of data (work, absence, or holiday-work)
+    const weeks = new Set();
+    for (const e of entries) weeks.add(isoWeekKey(e.date));
+
     const today = todayISO();
     const currentWeek = isoWeekKey(today);
     let bal = 0;
-    for (const wk in byWeek) {
-      const absences = absenceDaysInWeek(wk);
+    for (const wk of weeks) {
+      const regularHours = regularWorkHoursInWeek(wk);
+      const holidayHours = holidayWorkHoursInWeek(wk);
+      const absences = absenceDaysInWeek(wk);  // includes public holidays
       const absenceExcuse = Math.min(absences, 5) * settings.dailyTarget;
+
+      let expected;
       if (wk === currentWeek) {
-        // partial week — expectation = worked days * daily target, absences already excused (don't count expectation)
-        bal += byWeek[wk] - workedDaysInWeek(wk) * settings.dailyTarget;
+        expected = workedDaysInWeek(wk) * settings.dailyTarget;
       } else {
-        // full week — expectation reduced by absence days (up to 5 weekdays/week)
-        bal += byWeek[wk] - Math.max(0, settings.weeklyTarget - absenceExcuse);
+        expected = Math.max(0, settings.weeklyTarget - absenceExcuse);
       }
+      // Holiday work hours are PURE BONUS — they add to flex without offset.
+      bal += (regularHours - expected) + holidayHours;
     }
     return bal;
   }
 
   function thisWeekHours() {
+    // Display total: include all work hours (regular + holiday) for the user's awareness
     const wk = isoWeekKey(todayISO());
     return workEntries().filter(e => isoWeekKey(e.date) === wk).reduce((s, e) => s + e.hours, 0);
   }
@@ -2525,48 +2837,54 @@
     const year = new Date().getFullYear();
     const yearStart = `${year}-01-01`;
     const today = todayISO();
-    const byWeek = {};
-    for (const e of workEntries()) {
-      if (e.date < yearStart || e.date > today) continue;
-      const wk = isoWeekKey(e.date);
-      byWeek[wk] = (byWeek[wk] || 0) + e.hours;
-    }
-    for (const e of absenceEntries()) {
-      if (e.date < yearStart || e.date > today) continue;
-      const wk = isoWeekKey(e.date);
-      if (!(wk in byWeek)) byWeek[wk] = 0;
+
+    // Collect all weeks with entries in this year, then compute per-week delta
+    // using the same logic as flexBalance but scoped to entries within the year.
+    const weeks = new Set();
+    for (const e of entries) {
+      if (e.date >= yearStart && e.date <= today) weeks.add(isoWeekKey(e.date));
     }
     const currentWeek = isoWeekKey(today);
     let bal = 0;
     let totalHours = 0;
-    let workedDays = 0;
-    let absenceDays = 0;
-    for (const wk in byWeek) {
-      const absences = absenceEntriesInWeekInYear(wk, yearStart, today);
-      const absenceExcuse = Math.min(absences, 5) * settings.dailyTarget;
-      if (wk === currentWeek) {
-        bal += byWeek[wk] - workedDaysInWeek(wk) * settings.dailyTarget;
-      } else {
-        bal += byWeek[wk] - Math.max(0, settings.weeklyTarget - absenceExcuse);
+    for (const wk of weeks) {
+      const regularHours = workEntries()
+        .filter(e => isoWeekKey(e.date) === wk && e.date >= yearStart && e.date <= today && !isPublicHoliday(e.date))
+        .reduce((s, e) => s + e.hours, 0);
+      const holidayHours = workEntries()
+        .filter(e => isoWeekKey(e.date) === wk && e.date >= yearStart && e.date <= today && isPublicHoliday(e.date))
+        .reduce((s, e) => s + e.hours, 0);
+      const absenceSet = new Set();
+      for (const e of absenceEntries()) {
+        if (isoWeekKey(e.date) === wk && e.date >= yearStart && e.date <= today) absenceSet.add(e.date);
       }
-      totalHours += byWeek[wk];
+      // Holidays in this week within the year window
+      const sample = entries.find(e => isoWeekKey(e.date) === wk);
+      if (sample) {
+        const monday = mondayOfWeek(sample.date);
+        for (let i = 0; i < 7; i++) {
+          const d = isoDate(addDays(new Date(monday + 'T00:00:00Z'), i));
+          if (d >= yearStart && d <= today && isPublicHoliday(d)) absenceSet.add(d);
+        }
+      }
+      const absenceExcuse = Math.min(absenceSet.size, 5) * settings.dailyTarget;
+      let expected;
+      if (wk === currentWeek) {
+        const workedDays = new Set(
+          workEntries()
+            .filter(e => isoWeekKey(e.date) === wk && e.date >= yearStart && e.date <= today && !isPublicHoliday(e.date))
+            .map(e => e.date)
+        );
+        expected = workedDays.size * settings.dailyTarget;
+      } else {
+        expected = Math.max(0, settings.weeklyTarget - absenceExcuse);
+      }
+      bal += (regularHours - expected) + holidayHours;
+      totalHours += regularHours + holidayHours;
     }
-    for (const e of workEntries()) {
-      if (e.date < yearStart || e.date > today) continue;
-      workedDays += 1;
-    }
-    workedDays = new Set(workEntries().filter(e => e.date >= yearStart && e.date <= today).map(e => e.date)).size;
-    absenceDays = new Set(absenceEntries().filter(e => e.date >= yearStart && e.date <= today).map(e => e.date)).size;
+    const workedDays = new Set(workEntries().filter(e => e.date >= yearStart && e.date <= today).map(e => e.date)).size;
+    const absenceDays = new Set(absenceEntries().filter(e => e.date >= yearStart && e.date <= today).map(e => e.date)).size;
     return { balance: bal, totalHours, workedDays, absenceDays };
-  }
-
-  function absenceEntriesInWeekInYear(weekKey, yearStart, today) {
-    const days = new Set(
-      absenceEntries()
-        .filter(e => isoWeekKey(e.date) === weekKey && e.date >= yearStart && e.date <= today)
-        .map(e => e.date)
-    );
-    return days.size;
   }
 
   // ---- Render ----
@@ -2837,7 +3155,6 @@
 
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-      // Hours map includes absences as 0; sum work-only hours for cell
       const workHoursSum = entries
         .filter(e => e.date === dateStr && isCountedKind(entryKind(e)))
         .reduce((s, e) => s + e.hours, 0);
@@ -2848,7 +3165,9 @@
       const isToday = dateStr === today;
       const isSelected = dateStr === dayFilter;
       const isAbsence = dominantKind && isAbsenceKind(dominantKind);
-      const klass = isAbsence ? '' : classifyDay(workHoursSum);
+      const holiday = holidayInfoForDate(dateStr);
+      const isHoliday = !!holiday && !isAbsence; // explicit absence entry takes visual priority
+      const klass = (isAbsence || isHoliday) ? '' : classifyDay(workHoursSum);
 
       const classes = [
         'cal-cell',
@@ -2856,7 +3175,9 @@
         isFuture ? 'future' : '',
         isToday ? 'today' : '',
         isSelected ? 'selected' : '',
-        isAbsence ? 'absence absence-' + dominantKind : klass,
+        isAbsence ? 'absence absence-' + dominantKind : '',
+        isHoliday ? 'public-holiday' : '',
+        !isAbsence && !isHoliday ? klass : '',
         workHoursSum > 0 ? 'has-time' : ''
       ].filter(Boolean).join(' ');
 
@@ -2864,13 +3185,19 @@
       if (isAbsence) {
         label = `<div class="cal-day-hours" style="font-size: 11px; opacity: 0.85;">${ENTRY_KINDS[dominantKind].short}</div>`;
       } else if (workHoursSum > 0) {
-        label = `<div class="cal-day-hours">${workHoursSum.toFixed(workHoursSum % 1 === 0 ? 0 : 1)}h</div>`;
+        // Show hours; if it's a public holiday with work, show an asterisk
+        const hoursLabel = workHoursSum.toFixed(workHoursSum % 1 === 0 ? 0 : 1);
+        label = `<div class="cal-day-hours">${hoursLabel}h${isHoliday ? '*' : ''}</div>`;
+      } else if (isHoliday) {
+        label = `<div class="cal-day-hours" style="font-size: 10px; opacity: 0.7;">H</div>`;
       } else {
         label = '';
       }
       const numClass = isWeekend ? 'cal-day-num weekend-num' : 'cal-day-num';
 
-      html += `<div class="${classes}" data-date="${dateStr}" ${isFuture ? '' : 'role="button" tabindex="0"'}>
+      const titleAttr = holiday ? ` title="${escapeHTML(holiday.name)}"` : '';
+
+      html += `<div class="${classes}" data-date="${dateStr}"${titleAttr} ${isFuture ? '' : 'role="button" tabindex="0"'}>
         <div class="${numClass}">${day}</div>
         ${label}
       </div>`;
@@ -3184,9 +3511,74 @@
     renderStats();
     renderEntries();
     renderCalendar();
+    renderVacationCard();
     renderChart();
     renderCategoryBreakdown();
     renderFilterBanner();
+  }
+
+  function renderVacationCard() {
+    const wrap = $('vacation-card');
+    if (!wrap) return;
+    const years = relevantFerieYears();
+    if (years.length === 0) {
+      wrap.innerHTML = '<div style="text-align: center; padding: 16px; color: var(--ink-faint); font-style: italic;">Set your employment start date in Settings to track vacation accrual.</div>';
+      return;
+    }
+    const today = todayISO();
+    const currentYear = ferieYearForDate(today);
+    // Most recent first
+    const ordered = [...years].sort((a, b) => b - a);
+
+    const fmtDate = (iso) => {
+      const d = new Date(iso + 'T00:00:00Z');
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    };
+
+    wrap.innerHTML = ordered.map(y => {
+      const s = ferieYearSummary(y);
+      const isCurrent = y === currentYear;
+      const isPast = y < currentYear;
+      const earnedRounded = Math.round(s.earned * 100) / 100;
+      const remainingRounded = Math.round(s.remaining * 100) / 100;
+      const remainingClass = remainingRounded > 0 ? 'pos' : '';
+      // Earned-so-far means: months elapsed × 2.083
+      // For past years it's the full year. For current/future, partial.
+      const subTextEarned = isCurrent
+        ? `${(earnedRounded).toFixed(2).replace('.', ',')} / ${settings.vacationDaysPerYear} so far`
+        : isPast
+          ? (earnedRounded < settings.vacationDaysPerYear - 0.1
+             ? `partial year — employed for ${employmentMonthsInFerieYear(y)} month${employmentMonthsInFerieYear(y) === 1 ? '' : 's'}`
+             : 'Full year')
+          : 'Pending';
+      return `<div class="vac-year">
+        <div class="vac-year-header">
+          <div>
+            <span class="vac-year-label">${escapeHTML(s.label)}</span>
+            ${isCurrent ? '<span class="vac-current-tag">Current</span>' : ''}
+          </div>
+          <span class="vac-year-dates">${fmtDate(s.yearStart)} – ${fmtDate(s.yearEnd)}</span>
+        </div>
+        <div class="vac-stat">
+          <span class="vac-stat-label">Earned</span>
+          <span class="vac-stat-value">${earnedRounded.toFixed(2).replace('.', ',')}</span>
+          <span class="vac-stat-sub">${subTextEarned}</span>
+        </div>
+        <div class="vac-stat">
+          <span class="vac-stat-label">Used</span>
+          <span class="vac-stat-value">${s.used}</span>
+          <span class="vac-stat-sub">vacation day${s.used === 1 ? '' : 's'} logged</span>
+        </div>
+        <div class="vac-stat">
+          <span class="vac-stat-label">Remaining</span>
+          <span class="vac-stat-value ${remainingClass}">${remainingRounded.toFixed(2).replace('.', ',')}</span>
+          <span class="vac-stat-sub">use by ${fmtDate(s.periodEnd)}</span>
+        </div>
+        <div class="vac-disc-note">
+          + ${Math.round(s.earnedDisc * 100) / 100} discretionary day${s.earnedDisc === 1 ? '' : 's'} (feriefridage) earned — these lapse at the end of the holiday year if unused.
+        </div>
+      </div>`;
+    }).join('');
   }
 
   function renderChart() {
@@ -3346,6 +3738,136 @@
     toast._h = setTimeout(() => t.classList.remove('show'), 2200);
   }
 
+  // ---- Notifications ----
+  // Tags so we can find and close existing ones; SW-side notifications persist
+  // independently of the page lifecycle.
+  const NOTIF_TAG_RUNNING = 'flextide-timer-running';
+  const NOTIF_TAG_LONG_WARN = 'flextide-timer-long-warning';
+
+  function notifsAllowed() {
+    return 'Notification' in window
+      && Notification.permission === 'granted'
+      && settings.notificationsEnabled;
+  }
+
+  async function showTimerRunningNotification() {
+    if (!notifsAllowed()) return;
+    try {
+      const reg = await navigator.serviceWorker.getRegistration();
+      if (!reg) return;
+      const note = (timer && timer.note) ? timer.note : '';
+      await reg.showNotification('Flextide · timer running', {
+        tag: NOTIF_TAG_RUNNING,
+        body: note ? note : 'Tap to return to the app',
+        icon: 'icon-192.png',
+        badge: 'icon-192.png',
+        silent: true,        // no sound on start
+        requireInteraction: true,  // sticks until tapped/dismissed (Android only)
+        renotify: false
+      });
+    } catch (e) {
+      // Permission revoked or some other failure — nothing to do
+    }
+  }
+
+  async function scheduleLongTimerWarning() {
+    if (!notifsAllowed()) return;
+    if (!timer) return;
+    const warnAt = timer.startedAt + (settings.longTimerWarnHours || 8) * 3600000;
+    const delay = warnAt - Date.now();
+    if (delay <= 0) return;
+    try {
+      const reg = await navigator.serviceWorker.getRegistration();
+      if (!reg) return;
+      // Try Notification Triggers (TimestampTrigger) — Chrome on Android supports this.
+      // If unsupported, fall back to setTimeout (only fires while page is open).
+      if ('showTrigger' in Notification.prototype || typeof TimestampTrigger !== 'undefined') {
+        try {
+          await reg.showNotification(`Flextide · timer running ${settings.longTimerWarnHours}h+`, {
+            tag: NOTIF_TAG_LONG_WARN,
+            body: 'Did you forget to stop the timer? Tap to check.',
+            icon: 'icon-192.png',
+            badge: 'icon-192.png',
+            requireInteraction: true,
+            showTrigger: new TimestampTrigger(warnAt)
+          });
+          return;
+        } catch (e) {
+          // Falls through to setTimeout below
+        }
+      }
+      // Fallback: timeout. Only fires while the tab is open. Better than nothing.
+      if (longTimerFallbackHandle) clearTimeout(longTimerFallbackHandle);
+      longTimerFallbackHandle = setTimeout(() => {
+        if (notifsAllowed() && timer) {
+          reg.showNotification(`Flextide · timer running ${settings.longTimerWarnHours}h+`, {
+            tag: NOTIF_TAG_LONG_WARN,
+            body: 'Did you forget to stop the timer? Tap to check.',
+            icon: 'icon-192.png',
+            badge: 'icon-192.png',
+            requireInteraction: true
+          });
+        }
+      }, delay);
+    } catch (e) {}
+  }
+
+  let longTimerFallbackHandle = null;
+
+  async function clearTimerNotifications() {
+    if (longTimerFallbackHandle) {
+      clearTimeout(longTimerFallbackHandle);
+      longTimerFallbackHandle = null;
+    }
+    try {
+      const reg = await navigator.serviceWorker.getRegistration();
+      if (!reg) return;
+      const all = await reg.getNotifications({});
+      for (const n of all) {
+        if (n.tag === NOTIF_TAG_RUNNING || n.tag === NOTIF_TAG_LONG_WARN) {
+          n.close();
+        }
+      }
+    } catch (e) {}
+  }
+
+  async function requestNotificationPermissionAndEnable() {
+    if (!('Notification' in window)) {
+      toast('Notifications not supported on this browser');
+      return false;
+    }
+    if (!('serviceWorker' in navigator)) {
+      toast('Notifications need the installed app (https only)');
+      return false;
+    }
+    let perm = Notification.permission;
+    if (perm === 'default') {
+      perm = await Notification.requestPermission();
+    }
+    if (perm !== 'granted') {
+      toast(perm === 'denied'
+        ? 'Notifications blocked — enable in browser settings'
+        : 'Permission not granted');
+      return false;
+    }
+    settings.notificationsEnabled = true;
+    saveSettings();
+    toast('Notifications enabled');
+    // If a timer is currently running, show the running notification + schedule warning
+    if (timer) {
+      showTimerRunningNotification();
+      scheduleLongTimerWarning();
+    }
+    return true;
+  }
+
+  async function disableNotifications() {
+    settings.notificationsEnabled = false;
+    saveSettings();
+    await clearTimerNotifications();
+    toast('Notifications disabled');
+  }
+
   function startTimer() {
     timer = {
       startedAt: Date.now(),
@@ -3356,6 +3878,9 @@
     renderTimer();
     startTick();
     toast('Timer started');
+    // Fire-and-forget; don't block timer start on notification API
+    showTimerRunningNotification();
+    scheduleLongTimerWarning();
   }
 
   function stopTimer() {
@@ -3367,6 +3892,7 @@
       stopTick();
       renderTimer();
       toast('Timer cancelled (under 30s)');
+      clearTimerNotifications();
       return;
     }
     const note = (timer.note || $('timer-note').value || '').trim();
@@ -3390,6 +3916,7 @@
     renderTimer();
     renderAll();
     toast(`Logged ${fmtHM(elapsedHours)}`);
+    clearTimerNotifications();
   }
 
   let manualMode = 'hours'; // 'hours' or 'range'
@@ -3404,6 +3931,192 @@
   function entryKind(e) { return e.kind || 'work'; }
   function isCountedKind(kind) { return kind === 'work'; } // only work entries count toward flex
   function isAbsenceKind(kind) { return kind === 'vacation' || kind === 'sick' || kind === 'holiday'; }
+
+  // ---- Danish public holidays ----
+  // Compute Easter Sunday for a given year (Anonymous Gregorian algorithm).
+  function easterSunday(year) {
+    const a = year % 19;
+    const b = Math.floor(year / 100);
+    const c = year % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const L = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * L) / 451);
+    const month = Math.floor((h + L - 7 * m + 114) / 31); // 3=March, 4=April
+    const day = ((h + L - 7 * m + 114) % 31) + 1;
+    return new Date(Date.UTC(year, month - 1, day));
+  }
+
+  function addDays(d, n) {
+    const r = new Date(d);
+    r.setUTCDate(r.getUTCDate() + n);
+    return r;
+  }
+
+  function isoDate(d) {
+    return d.toISOString().slice(0, 10);
+  }
+
+  // Returns: { 'YYYY-MM-DD': { id: 'newYears'|..., name: 'New Year\'s Day' }, ... }
+  // For a given calendar year, only including observed ones per settings.
+  function holidayCalendar(year) {
+    const easter = easterSunday(year);
+    const ALL = {
+      newYears:        { date: `${year}-01-01`,                name: "New Year's Day" },
+      maundyThursday:  { date: isoDate(addDays(easter, -3)),   name: 'Maundy Thursday' },
+      goodFriday:      { date: isoDate(addDays(easter, -2)),   name: 'Good Friday' },
+      easterMonday:    { date: isoDate(addDays(easter,  1)),   name: 'Easter Monday' },
+      ascensionDay:    { date: isoDate(addDays(easter, 39)),   name: 'Ascension Day' },
+      whitMonday:      { date: isoDate(addDays(easter, 50)),   name: 'Whit Monday' },
+      constitutionDay: { date: `${year}-06-05`,                name: 'Constitution Day' },
+      christmasEve:    { date: `${year}-12-24`,                name: 'Christmas Eve' },
+      christmasDay:    { date: `${year}-12-25`,                name: 'Christmas Day' },
+      secondChristmas: { date: `${year}-12-26`,                name: '2nd Christmas Day' },
+      newYearsEve:     { date: `${year}-12-31`,                name: "New Year's Eve" }
+    };
+    // Filter to observed ones
+    const observed = settings.holidayObservances || {};
+    const result = {};
+    for (const [id, h] of Object.entries(ALL)) {
+      if (observed[id]) {
+        result[h.date] = { id, name: h.name };
+      }
+    }
+    return result;
+  }
+
+  // Cached lookup across multiple years (typically used for the active range)
+  const _holidayCache = new Map();
+  function holidayInfoForDate(dateStr) {
+    const year = dateStr.slice(0, 4);
+    let yearMap = _holidayCache.get(year);
+    if (!yearMap) {
+      yearMap = holidayCalendar(parseInt(year, 10));
+      _holidayCache.set(year, yearMap);
+    }
+    return yearMap[dateStr] || null;
+  }
+  function isPublicHoliday(dateStr) {
+    return !!holidayInfoForDate(dateStr);
+  }
+  function clearHolidayCache() {
+    _holidayCache.clear();
+  }
+
+  // ---- Danish vacation accounting ----
+  // Holiday year (ferieår): Sept 1 → Aug 31 (when days are earned)
+  // Holiday period (afholdelsesperiode): Sept 1 → Dec 31 of the following year
+  // Accrual: 25 days / 12 months = 2.08333... days/month
+  // Discretionary days ("feriefridage") accrue similarly but per CALENDAR year
+  //   and lapse at year-end (per contract).
+  //
+  // Convention: ferieår identified by the year it STARTS, e.g. "2024" = Sept 1, 2024 → Aug 31, 2025.
+
+  function ferieYearForDate(dateStr) {
+    // dateStr: 'YYYY-MM-DD' → returns the start year of the ferieår
+    const y = parseInt(dateStr.slice(0, 4), 10);
+    const mm = parseInt(dateStr.slice(5, 7), 10);
+    return mm >= 9 ? y : y - 1;
+  }
+  function ferieYearStart(year)  { return `${year}-09-01`; }
+  function ferieYearEnd(year)    { return `${year + 1}-08-31`; }
+  function feriePeriodEnd(year)  { return `${year + 2}-12-31`; }
+
+  // For "feriefridage" (discretionary), the contract specifies "per holiday year"
+  // and "5/12 per month of employment" — we use the same ferieår.
+  // Days lapse at the end of the holiday year (not the extended period).
+
+  // Months of employment in a given ferieår (clamped to actual employment date)
+  // Returns a float — partial months count proportionally for accrual purposes.
+  function employmentMonthsInFerieYear(year) {
+    const startStr = settings.employmentStartDate || '2024-08-01';
+    const yearStart = new Date(ferieYearStart(year) + 'T00:00:00Z');
+    const yearEnd = new Date(ferieYearEnd(year) + 'T00:00:00Z');
+    const empStart = new Date(startStr + 'T00:00:00Z');
+    const today = new Date(todayISO() + 'T00:00:00Z');
+
+    // Effective start = max(yearStart, empStart)
+    const effStart = empStart > yearStart ? empStart : yearStart;
+    // Effective end = min(yearEnd, today)
+    const effEnd = today < yearEnd ? today : yearEnd;
+
+    if (effEnd < effStart) return 0;
+
+    // Danish convention: vacation accrues per full month of employment.
+    // 1 day of employment in a month accrues a full month's worth for that month.
+    // (Statutory: "for each month of employment".) We mimic that: count any month
+    // touched by the employment window.
+    let months = 0;
+    const cursor = new Date(Date.UTC(effStart.getUTCFullYear(), effStart.getUTCMonth(), 1));
+    const endMonth = new Date(Date.UTC(effEnd.getUTCFullYear(), effEnd.getUTCMonth(), 1));
+    while (cursor <= endMonth) {
+      months += 1;
+      cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+    }
+    return months;
+  }
+
+  function vacationDaysEarned(year) {
+    const months = employmentMonthsInFerieYear(year);
+    const perMonth = (settings.vacationDaysPerYear || 25) / 12;
+    return Math.min(months * perMonth, settings.vacationDaysPerYear || 25);
+  }
+
+  function discretionaryDaysEarned(year) {
+    const months = employmentMonthsInFerieYear(year);
+    const perMonth = (settings.discretionaryDaysPerYear || 5) / 12;
+    return Math.min(months * perMonth, settings.discretionaryDaysPerYear || 5);
+  }
+
+  // Count vacation days used in a given ferieår.
+  // Used = number of distinct dates with a 'vacation' entry whose date falls in
+  // the usable period (start of ferieår through end of extended period).
+  // Note: distinction between statutory vacation and discretionary is by entry tag/category — not enforced.
+  function vacationDaysUsed(year) {
+    const periodStart = ferieYearStart(year);
+    const periodEnd = feriePeriodEnd(year);
+    const dates = new Set(
+      entries
+        .filter(e => entryKind(e) === 'vacation' && e.date >= periodStart && e.date <= periodEnd)
+        .map(e => e.date)
+    );
+    return dates.size;
+  }
+
+  // Summary for a single ferieår — useful for the UI card.
+  function ferieYearSummary(year) {
+    const earned = vacationDaysEarned(year);
+    const earnedDisc = discretionaryDaysEarned(year);
+    const used = vacationDaysUsed(year);
+    const remaining = Math.max(0, earned - used);
+    return {
+      year,
+      label: `${year}/${String((year + 1) % 100).padStart(2, '0')}`,
+      earned,
+      earnedDisc,
+      used,
+      remaining,
+      yearStart: ferieYearStart(year),
+      yearEnd: ferieYearEnd(year),
+      periodEnd: feriePeriodEnd(year)
+    };
+  }
+
+  function relevantFerieYears() {
+    // Return the ferieår starts we want to display: previous (if any data), current, next (if started)
+    const today = todayISO();
+    const current = ferieYearForDate(today);
+    const result = [];
+    const startStr = settings.employmentStartDate || '2024-08-01';
+    const empYear = ferieYearForDate(startStr);
+    for (let y = empYear; y <= current; y++) result.push(y);
+    return result;
+  }
 
   // ---- Category & tag helpers ----
   function getCategoryById(id) {
@@ -3982,6 +4695,75 @@
     $('set-monthly').value = settings.monthlyTarget;
     $('set-lunch').value = settings.lunchMinutes;
     $('m-lunch-mins').textContent = settings.lunchMinutes;
+    $('set-warn-hours').value = settings.longTimerWarnHours;
+    $('set-emp-start').value = settings.employmentStartDate || '2024-08-01';
+    $('set-vac-days').value = settings.vacationDaysPerYear;
+    $('set-disc-days').value = settings.discretionaryDaysPerYear;
+    $('set-auto-holidays').checked = !!settings.autoCreateHolidayEntries;
+    renderHolidayToggles();
+    updateNotifUI();
+  }
+
+  function renderHolidayToggles() {
+    const wrap = $('holiday-toggles');
+    if (!wrap) return;
+    // Use current calendar year for label dates (preview)
+    const previewYear = new Date().getFullYear();
+    const tempObs = settings.holidayObservances || {};
+    // Get all defined holiday IDs from a reference build (force all on, then read names)
+    const allIds = ['newYears','maundyThursday','goodFriday','easterMonday','ascensionDay',
+                    'whitMonday','constitutionDay','christmasEve','christmasDay',
+                    'secondChristmas','newYearsEve'];
+    const refMap = (() => {
+      // Build the canonical list using all-true observances, just for naming/date display
+      const savedObs = settings.holidayObservances;
+      settings.holidayObservances = Object.fromEntries(allIds.map(id => [id, true]));
+      clearHolidayCache();
+      const result = {};
+      for (const [date, info] of Object.entries(holidayCalendar(previewYear))) {
+        result[info.id] = { date, name: info.name };
+      }
+      settings.holidayObservances = savedObs;
+      clearHolidayCache();
+      return result;
+    })();
+    const fmtDate = (iso) => {
+      const d = new Date(iso + 'T00:00:00Z');
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    };
+    wrap.innerHTML = allIds.map(id => {
+      const info = refMap[id];
+      if (!info) return '';
+      const checked = tempObs[id] ? 'checked' : '';
+      return `<label class="holiday-toggle-item">
+        <span style="display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" data-holiday-id="${id}" ${checked} style="margin: 0;">
+          ${escapeHTML(info.name)}
+        </span>
+        <span class="holiday-date">${escapeHTML(fmtDate(info.date))}</span>
+      </label>`;
+    }).join('');
+    wrap.querySelectorAll('input[data-holiday-id]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const hid = cb.getAttribute('data-holiday-id');
+        if (!settings.holidayObservances) settings.holidayObservances = {};
+        settings.holidayObservances[hid] = cb.checked;
+        saveSettings();
+        clearHolidayCache();
+        renderAll();
+      });
+    });
+  }
+
+  function updateNotifUI() {
+    const toggle = $('notif-toggle');
+    const badge = $('notif-badge');
+    if (!toggle || !badge) return;
+    const granted = ('Notification' in window) && Notification.permission === 'granted';
+    const on = granted && settings.notificationsEnabled;
+    toggle.checked = on;
+    badge.textContent = on ? 'On' : (Notification.permission === 'denied' ? 'Blocked' : 'Off');
+    badge.classList.toggle('on', on);
   }
 
   function bindSettings() {
@@ -3990,18 +4772,84 @@
       const w = parseFloat($('set-weekly').value);
       const m = parseFloat($('set-monthly').value);
       const l = parseFloat($('set-lunch').value);
+      const wh = parseFloat($('set-warn-hours').value);
+      const vac = parseInt($('set-vac-days').value, 10);
+      const disc = parseInt($('set-disc-days').value, 10);
+      const empStart = $('set-emp-start').value;
       if (d > 0 && d <= 24) settings.dailyTarget = d;
       if (w > 0 && w <= 168) settings.weeklyTarget = w;
       if (m > 0 && m <= 744) settings.monthlyTarget = m;
       if (!isNaN(l) && l >= 0 && l <= 180) settings.lunchMinutes = l;
+      if (wh >= 1 && wh <= 24) settings.longTimerWarnHours = wh;
+      if (vac >= 0 && vac <= 50) settings.vacationDaysPerYear = vac;
+      if (disc >= 0 && disc <= 20) settings.discretionaryDaysPerYear = disc;
+      if (empStart) settings.employmentStartDate = empStart;
       saveSettings();
       $('m-lunch-mins').textContent = settings.lunchMinutes;
       updatePreview();
+      clearHolidayCache();
       renderAll();
+      if (timer && notifsAllowed()) scheduleLongTimerWarning();
     };
-    ['set-daily','set-weekly','set-monthly','set-lunch'].forEach(id => {
+    ['set-daily','set-weekly','set-monthly','set-lunch','set-warn-hours',
+     'set-vac-days','set-disc-days','set-emp-start'].forEach(id => {
       $(id).addEventListener('change', handler);
     });
+    $('set-auto-holidays').addEventListener('change', (e) => {
+      settings.autoCreateHolidayEntries = e.target.checked;
+      saveSettings();
+      if (e.target.checked) {
+        autoPopulateHolidayEntries();
+      }
+      renderAll();
+    });
+    // Notifications toggle has its own handler (needs async permission flow)
+    $('notif-toggle').addEventListener('change', async (e) => {
+      if (e.target.checked) {
+        const ok = await requestNotificationPermissionAndEnable();
+        if (!ok) e.target.checked = false;
+      } else {
+        await disableNotifications();
+      }
+      updateNotifUI();
+    });
+  }
+
+  // Create holiday entries for all observed public holidays from employment start to today
+  // (skip dates that already have any entry)
+  function autoPopulateHolidayEntries() {
+    const today = todayISO();
+    const startStr = settings.employmentStartDate || '2024-08-01';
+    const startYear = parseInt(startStr.slice(0, 4), 10);
+    const endYear = parseInt(today.slice(0, 4), 10);
+    const existing = new Set(entries.map(e => e.date + '|' + entryKind(e)));
+    let added = 0;
+    for (let y = startYear; y <= endYear; y++) {
+      const cal = holidayCalendar(y);
+      for (const [date, info] of Object.entries(cal)) {
+        if (date < startStr || date > today) continue;
+        // Skip if a holiday entry already exists for this date
+        if (existing.has(date + '|holiday')) continue;
+        entries.push({
+          id: 'h' + Date.now() + Math.random().toString(36).slice(2, 6),
+          date,
+          hours: 0,
+          note: info.name,
+          created: Date.now(),
+          source: 'auto',
+          kind: 'holiday',
+          tags: []
+        });
+        existing.add(date + '|holiday');
+        added += 1;
+      }
+    }
+    if (added > 0) {
+      saveEntries();
+      toast(`Added ${added} holiday entr${added === 1 ? 'y' : 'ies'}`);
+    } else {
+      toast('No new holidays to add');
+    }
   }
 
   // ---- Init ----
@@ -4022,7 +4870,15 @@
     $('cat-new-color').value = nextCategoryColor();
     renderAll();
     renderTimer();
-    if (timer) startTick();
+    if (timer) {
+      startTick();
+      // Re-establish notifications if they were enabled and a timer is still running
+      // (the page may have reloaded; SW notifications persist but the setTimeout fallback didn't)
+      if (notifsAllowed()) {
+        showTimerRunningNotification();
+        scheduleLongTimerWarning();
+      }
+    }
     updatePreview();
 
     $('timer-toggle').addEventListener('click', () => {
